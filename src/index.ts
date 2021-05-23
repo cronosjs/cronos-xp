@@ -1,151 +1,714 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-const guildSchema = new mongoose.Schema({
-    _id: String,
-    users: {}
-}, {versionKey: false});
+const guildSchema = new mongoose.Schema({_id: String, users: {}}, {versionKey: false});
+
+class MissingArgumentException extends Error {
+    constructor(message: string) {
+        super();
+        this.name = "MissingArgumentException";
+        this.message = message;
+    }
+}
 
 /**
- * General
- * ToDo-List:
- *  - Think of a system for how levels and xp are connected
- *  - Add isUser()
- *  - Add isGuild()
- *  - Add setLevel() | setXp() [Or hybrid via Object]
- *  - Add addLevel() | addXp() [Or hybrid via Object]
- *  - Add subLevel() | subXp() [Or hybrid via Object]
- *  - Add getLeaderboard()
+ * @property {number} [growthMultiplier = 30]
+ * @property {number} [startWithZero = true]
+ * @example
+ * // growthMultiplier = 0 means x³ and not 0 * x²
+ * const DefaultValues = {
+ *     growthMultiplier = 30,
+ *     startWithZero = true
+ * }
+ */
+interface ConstructorOptions {
+    growthMultiplier?: number
+    startWithZero?: boolean
+}
+
+/**
+ * @property {number} xp
+ * @property {number} level
+ */
+interface User {
+    xp: number,
+    level: number
+}
+
+/**
+ * @property {number} newLevel
+ * @property {number} newXp
+ * @property {number} [hasLevelUp]
+ * @property {number} [hasLevelDown]
+ */
+interface AddSubtractReturnObject {
+    newLevel: number
+    newXp: number
+    hasLevelUp?: boolean
+    hasLevelDown?: boolean
+}
+
+/**
+ * TODO:
+ *  - Either adding a few Properties to Interface "AddSubtractReturnObject" or a function to get amount of XP till next level
+ *  - Test if everything works as its supposed to
+ *  - Adding proper example.js file
+ *  - Adding a readme.md explaining everything
+ *  - Refactoring files etc and create an NPM package
  */
 
 class LevelSystem {
-    private readonly _model: any = null;
+    private readonly _model: any;
+    private readonly _growthMultiplier: number;
+    private readonly _startWithZero: boolean;
 
     /**
-     * @param {string} mongoUrl - The URL to the MongoDB
+     * @param {string} mongoUrl - The URL to the mongoDB
+     * @param {options} [options] - An optional parameter for options
      */
-    constructor(mongoUrl: string) {
-        mongoose.connect(mongoUrl, {useNewUrlParser: true, useUnifiedTopology: true})
+    constructor(mongoUrl: string, options?: ConstructorOptions) {
+        if (typeof options?.growthMultiplier !== "undefined") {
+            if (typeof options?.growthMultiplier === "number") {
+                this._growthMultiplier = Math.abs(options.growthMultiplier)
+            } else {
+                console.info("Invalid growthMultiplier input. Setting growthMultiplier to default (30)")
+                this._growthMultiplier = 30
+            }
+        } else {
+            this._growthMultiplier = 30
+        }
+
+        if (typeof options?.startWithZero !== "undefined") {
+            if (typeof options?.startWithZero === "boolean") {
+                this._startWithZero = options.startWithZero
+            } else {
+                console.info("Invalid startWithZero input. Setting startWithZero to default (true)")
+                this._startWithZero = true
+            }
+        } else {
+            this._startWithZero = true
+        }
+
+        mongoose.connect(mongoUrl, {useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
+            console.log("\x1b[32mSuccessfully connected to mongoDB\x1b[0m")
+        }).catch((e: Error) => {
+            console.error(e)
+        })
+
         this._model = mongoose.model("GuildXP", guildSchema, "GuildXP")
     }
 
     /**
-     * @param {string} guildId - The ID of the Guild
-     * @param {string} userId - The ID of the User
-     *
-     * @return {Promise<Object | boolean>} - Returns the users data if he exists or false if he doesn't
+     * Function that returns the amount of xp needed for a certain level
+     * @param {number} targetLevel - The desired level
+     * @returns {number} - Amount of xp needed for targetLevel
+     * @throws {TypeError} - If the growthMultiplier isn't a number
      */
-    public async getUser(guildId: string | number, userId: string | number): Promise<object | boolean> {
-        if (typeof guildId === "number") guildId = guildId.toString()
-        if (typeof userId === "number") userId = userId.toString()
+    public xpForLevel(targetLevel: number): number {
+        if (typeof this._growthMultiplier === "number") {
+            if (this._growthMultiplier === 0) {
+                // level³ = xp
+                let functionValue = Math.pow(targetLevel, 3)
+                if (!this._startWithZero) {
+                    // level³ - level = xp
+                    functionValue = functionValue - targetLevel
+                }
+                return Math.round(functionValue)
+            } else {
+                // growthMultiplier * level² = xp
+                let functionValue = Math.abs(this._growthMultiplier) * Math.pow(targetLevel, 2)
+                if (!this._startWithZero) {
+                    // growthMultiplier * level² - growthMultiplier = xp
+                    functionValue = functionValue - this._growthMultiplier
+                }
+                return Math.round(functionValue)
+            }
+        } else {
+            throw new TypeError("\"growthMultiplier\" has an invalid type. Expecting \"number\"")
+        }
+    }
+
+    /**
+     * Function that returns the level for a specific amount of xp
+     * @param {number} targetXp - The desired xp
+     * @returns {number} - The level at this amount of xp
+     * @throws {TypeError} - If the growthMultiplier isn't a number
+     */
+    public levelForXp(targetXp: number): number {
+        if (typeof this._growthMultiplier === "number") {
+            if (this._growthMultiplier === 0) {
+                // level = xp^1/3
+                let functionValue
+                this._startWithZero ? functionValue = targetXp : functionValue = targetXp + this._growthMultiplier
+                return Math.floor(Math.pow(functionValue, 1 / 3))
+            } else {
+                // level = (xp / growthMultiplier)^1/2
+                let functionValue
+                this._startWithZero ? functionValue = targetXp : functionValue = targetXp + this._growthMultiplier
+                return Math.floor(Math.pow(functionValue / Math.abs(this._growthMultiplier), 1 / 2))
+            }
+        } else {
+            throw new TypeError("\"growthMultiplier\" has an invalid type. Expecting \"number\"")
+        }
+    }
+
+    /**
+     *
+     * @param {(string | number)} guildId - The id of the guild
+     * @param {(string | number)} userId - The id of the user
+     * @param {number} value - The amount of xp which the level and xp are set to
+     * @returns {Promise<boolean>} - Returns true if the operation was successful
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {TypeError} - If a different argument type was expected
+     * @throws {Error} - If there was a problem with the update operation
+     */
+    public async setXp(guildId: string | number, userId: string | number, value: number): Promise<boolean> {
+        try {
+            guildId = await LevelSystem._validateGuildId(guildId)
+            userId = await LevelSystem._validateUserId(userId)
+        } catch (e) {
+            throw e
+        }
 
         return new Promise(((resolve, reject) => {
-            this._model.findOne(
+            this._model.updateOne(
                 {"_id": guildId},
-                {"users": {[userId]: 1}}
-            ).then((result: any) => {
-                result.users[userId] ? resolve(result.users[userId]) : resolve(false)
+                {
+                    $set: {
+                        [`users.${userId}.level`]: this.levelForXp(value),
+                        [`users.${userId}.xp`]: value
+                    }
+                },
+                (e: Error) => {
+                    if (e) reject(e);
+                    resolve(true);
+                }
+            )
+        }))
+    }
+
+    /**
+     * @param {(string | number)} guildId - The id of the guild
+     * @param {(string | number)} userId - The id of the user
+     * @param {number} value - The level which the level and xp are set to
+     * @returns {Promise<boolean>} - Returns true if the operation was successful
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {TypeError} - If a different argument type was expected
+     * @throws {Error} - If there was a problem with the update operation
+     */
+    public async setLevel(guildId: string | number, userId: string | number, value: number): Promise<boolean> {
+        try {
+            guildId = await LevelSystem._validateGuildId(guildId)
+            userId = await LevelSystem._validateUserId(userId)
+        } catch (e) {
+            throw e
+        }
+
+        return new Promise(((resolve, reject) => {
+            this._model.updateOne(
+                {"_id": guildId},
+                {
+                    $set: {
+                        [`users.${userId}.level`]: value,
+                        [`users.${userId}.xp`]: this.xpForLevel(value)
+                    }
+                },
+                (e: Error) => {
+                    if (e) reject(e);
+                    resolve(true);
+                }
+            )
+        }))
+    }
+
+    /**
+     * @param {(string | number)} guildId - The id of the guild
+     * @param {(string | number)} userId - The id of the user
+     * @param {number} value - The amount of xp to add to that user
+     * @returns {Promise<AddSubtractReturnObject>} - Returns an object with properties "newLevel", "newXp", "hasLevelUp"
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {TypeError} - If a different argument type was expected
+     * @throws {Error} - If the user couldn't be found or if there was a problem with the update operation
+     */
+    public async addXp(guildId: string | number, userId: string | number, value: number): Promise<AddSubtractReturnObject> {
+        try {
+            guildId = await LevelSystem._validateGuildId(guildId)
+            userId = await LevelSystem._validateUserId(userId)
+        } catch (e) {
+            throw e
+        }
+
+        let user = await this.getUser(guildId, userId);
+        return new Promise(((resolve, reject) => {
+            if (typeof user !== "boolean") {
+                value = Math.floor(Math.abs(value))
+                let newXp: number = user.xp + value;
+                let newLevel: number = this.levelForXp(newXp);
+                let levelDif: number = newLevel - user.level
+                let hasLevelUp: boolean = levelDif > 0
+                this._model.updateOne(
+                    {"_id": guildId},
+                    {
+                        $set: {
+                            [`users.${userId}.level`]: newLevel,
+                            [`users.${userId}.xp`]: newXp
+                        }
+                    },
+                    (e: Error) => {
+                        if (e) reject(e);
+                        resolve({
+                            newLevel: newLevel,
+                            newXp: newXp,
+                            hasLevelUp: hasLevelUp
+                        });
+                    }
+                )
+            } else {
+                throw Error("Target user couldn't be found in the database")
+            }
+        }))
+    }
+
+    /**
+     * @param {(string | number)} guildId - The id of the guild
+     * @param {(string | number)} userId - The id of the user
+     * @param {number} value - The amount of levels to add to that user
+     * @returns {Promise<AddSubtractReturnObject>} - Returns an object with properties "newLevel", "newXp", "hasLevelUp"
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {TypeError} - If a different argument type was expected
+     * @throws {Error} - If the user couldn't be found or if there was a problem with the update operation
+     */
+    public async addLevel(guildId: string | number, userId: string | number, value: number): Promise<AddSubtractReturnObject> {
+        try {
+            guildId = await LevelSystem._validateGuildId(guildId)
+            userId = await LevelSystem._validateUserId(userId)
+        } catch (e) {
+            throw e
+        }
+
+        let user = await this.getUser(guildId, userId);
+        return new Promise(((resolve, reject) => {
+            if (typeof user !== "boolean") {
+                value = Math.floor(Math.abs(value))
+                let newLevel: number = user.level + value;
+                let newXp: number = user.xp + this.xpForLevel(value - user.level)
+                let hasLevelUp: boolean = value > 0;
+                this._model.updateOne(
+                    {"_id": guildId},
+                    {
+                        $set: {
+                            [`users.${userId}.level`]: newLevel,
+                            [`users.${userId}.xp`]: newXp
+                        }
+                    },
+                    (e: Error) => {
+                        if (e) reject(e);
+                        resolve({
+                            newLevel: newLevel,
+                            newXp: newXp,
+                            hasLevelUp: hasLevelUp
+                        });
+                    }
+                )
+            } else {
+                throw Error("Target user couldn't be found in the database")
+            }
+        }))
+    }
+
+    /**
+     * @param {(string | number)} guildId - The id of the guild
+     * @param {(string | number)} userId - The id of the user
+     * @param {number} value - The amount of xp to remove from that user
+     * @returns {Promise<AddSubtractReturnObject>} - Returns an object with properties "newLevel", "newXp", "hasLevelDown"
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {TypeError} - If a different argument type was expected
+     * @throws {Error} - If the user couldn't be found or if there was a problem with the update operation
+     */
+    public async subtractXp(guildId: string | number, userId: string | number, value: number): Promise<AddSubtractReturnObject> {
+        try {
+            guildId = await LevelSystem._validateGuildId(guildId)
+            userId = await LevelSystem._validateUserId(userId)
+        } catch (e) {
+            throw e
+        }
+
+        let user = await this.getUser(guildId, userId);
+        return new Promise(((resolve, reject) => {
+            if (typeof user !== "boolean") {
+                let newXp: number = user.xp - value;
+                if (newXp < 0) newXp = 0;
+                let newLevel: number = this.levelForXp(newXp);
+                let levelDif: number = newLevel - user.level;
+                let hasLevelDown: boolean = levelDif < 0;
+                this._model.updateOne(
+                    {"_id": guildId},
+                    {
+                        $set: {
+                            [`users.${userId}.level`]: newLevel,
+                            [`users.${userId}.xp`]: newXp
+                        }
+                    },
+                    (e: Error) => {
+                        if (e) reject(e);
+                        resolve({
+                            newLevel: newLevel,
+                            newXp: newXp,
+                            hasLevelDown: hasLevelDown
+                        });
+                    }
+                )
+            } else {
+                throw Error("Target user couldn't be found in the database")
+            }
+        }))
+    }
+
+    /**
+     * @param {(string | number)} guildId - The id of the guild
+     * @param {(string | number)} userId - The id of the user
+     * @param {number} value - The amount of levels to remove from that user
+     * @returns {Promise<AddSubtractReturnObject>} - Returns an object with properties "newLevel", "newXp", "hasLevelDown"
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {TypeError} - If a different argument type was expected
+     * @throws {Error} - If the user couldn't be found or if there was a problem with the update operation
+     */
+    public async subtractLevel(guildId: string | number, userId: string | number, value: number): Promise<AddSubtractReturnObject> {
+        try {
+            guildId = await LevelSystem._validateGuildId(guildId)
+            userId = await LevelSystem._validateUserId(userId)
+        } catch (e) {
+            throw e
+        }
+
+        let user = await this.getUser(guildId, userId);
+        return new Promise(((resolve, reject) => {
+            if (typeof user !== "boolean") {
+                let newLevel: number = user.level - value;
+                if (newLevel < 0) newLevel = 0;
+                let newXp = user.xp - (this.xpForLevel(user.level) - this.xpForLevel(newLevel));
+                let levelDif: number = newLevel - user.level;
+                let hasLevelDown: boolean = levelDif < 0;
+
+                this._model.updateOne(
+                    {"_id": guildId},
+                    {
+                        $set: {
+                            [`users.${userId}.level`]: newLevel,
+                            [`users.${userId}.xp`]: newXp
+                        }
+                    },
+                    (e: Error) => {
+                        if (e) reject(e);
+                        resolve({
+                            newLevel: newLevel,
+                            newXp: newXp,
+                            hasLevelDown: hasLevelDown
+                        });
+                    }
+                )
+            } else {
+                throw Error("Target user couldn't be found in the database")
+            }
+        }))
+    }
+
+    /**
+     * @param {(string | number)} guildId - The id of the guild
+     * @param {number} [limit = 10] - The amount of leaderboard entries to return
+     * @returns {Promise<[string, unknown][] | boolean} - Returns an array of arrays that consist of the id as a string and "User" object
+     * @example
+     * //Returns:
+     * [["id1", {xp: 0, level: 0}],["id2", {xp: 0, level: 0}]]
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {TypeError} - If a different argument type was expected
+     * @throws {Error} - If there was a problem with the update operation
+     */
+    public async getLeaderboard(guildId: string | number, limit?: number): Promise<[string, unknown][] | boolean> {
+        try {
+            guildId = await LevelSystem._validateGuildId(guildId)
+        } catch (e) {
+            throw e
+        }
+
+        if (limit) {
+            limit = Math.abs(limit)
+        } else {
+            limit = 10
+        }
+
+        return new Promise(((resolve, reject) => {
+            this._model.findOne({"_id": guildId}).then((result: any) => {
+                if (result === null) resolve(false)
+                let a = Object.entries(result.users)
+                // @ts-ignore
+                let b = a.sort((a: [string, User], b: [string, User]) => b[1].xp - a[1].xp)
+                let c = b.slice(0, limit)
+                resolve(c)
             }).catch((e: Error) => {
-                reject(e)
+                reject(e);
             })
         }))
     }
 
     /**
-     * @param {string} guildId - The ID of the Guild
-     * @param {string} userId - The ID of the User
-     *
-     * @return {Promise<Object | boolean>} - Returns true if the user was created or an Error if there is one
+     * @param {(string | number)} guildId - The id of the guild
+     * @param {(string | number)} userId - The id of the user
+     * @returns {Promise<boolean>} - Returns true if user exists and false if he doesn't
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {TypeError} - If a different argument type was expected
+     * @throws {Error} - If there was a problem with the update operation
      */
-    public async createUser(guildId: string | number, userId: string | number): Promise<boolean | Error> {
-        if (typeof guildId === "number") guildId = guildId.toString()
-        if (typeof userId === "number") userId = userId.toString()
+    public async isUser(guildId: string | number, userId: string | number): Promise<boolean> {
+        try {
+            guildId = await LevelSystem._validateGuildId(guildId)
+            userId = await LevelSystem._validateUserId(userId)
+        } catch (e) {
+            throw e
+        }
 
         return new Promise(((resolve, reject) => {
+            this._model.findOne({"_id": guildId, [`users.${userId}`]: {$exists: true}}).then((result: any) => {
+                if (result === null) resolve(false)
+                resolve(true)
+            }).catch((e: Error) => {
+                reject(e);
+            })
+        }))
+    }
 
-            /**
-             * TODO: Insert isUser() check here
-             */
+    /**
+     * @param {(string | number)} guildId - The id of the guild
+     * @param {(string | number)} userId - The id of the user
+     * @returns {Promise<Object | boolean>} - Returns the users data if he exists or false if he doesn't
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {TypeError} - If a different argument type was expected
+     * @throws {Error} - If there was a problem with the update operation
+     */
+    public async getUser(guildId: string | number, userId: string | number): Promise<User | boolean> {
+        try {
+            guildId = await LevelSystem._validateGuildId(guildId)
+            userId = await LevelSystem._validateUserId(userId)
+        } catch (e) {
+            throw e
+        }
 
+        let isUser = await this.isUser(guildId, userId)
+
+        return new Promise(((resolve, reject) => {
+            if (!isUser) resolve(false)
+            this._model.findOne(
+                {"_id": guildId},
+                //This can be commented if needed to take off the selecting load from MongoDB
+                {"users": {[userId]: 1}}
+                //
+            ).then((result: any) => {
+                result.users[userId] ? resolve(result.users[userId]) : resolve(false);
+            }).catch((e: Error) => {
+                reject(e);
+            })
+        }))
+    }
+
+    /**
+     * @param {(string | number)} guildId - The id of the guild
+     * @param {(string | number)} userId - The id of the user
+     * @returns {Promise<boolean>} - Returns true if the user was created
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {TypeError} - If a different argument type was expected
+     * @throws {Error} - If there already is a user with this id in this guild or if there was a problem with the update operation
+     */
+    public async createUser(guildId: string | number, userId: string | number): Promise<boolean> {
+        try {
+            guildId = await LevelSystem._validateGuildId(guildId)
+            userId = await LevelSystem._validateUserId(userId)
+        } catch (e) {
+            throw e
+        }
+
+        const isUser = await this.isUser(guildId, userId)
+        if (isUser) throw new Error("This guild already has a user with this id")
+
+        return new Promise(((resolve, reject) => {
             this._model.updateOne(
                 {"_id": guildId},
                 {$set: {[`users.${userId}`]: {"xp": 0, "level": 0}}},
                 (e: Error) => {
-                    if (e) reject(e)
-                    resolve(true)
+                    if (e) reject(e);
+                    resolve(true);
                 }
             )
         }))
     }
 
     /**
-     * @param {string} guildId - The ID of the Guild
-     * @param {string} userId - The ID of the User
-     *
-     * @return {Promise<boolean | Error>} - Returns true if the user was deleted or an Error when there is one
+     * @param {(string | number)} guildId - The id of the guild
+     * @param {(string | number)} userId - The id of the user
+     * @returns {Promise<boolean>} - Returns true if the user was deleted
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {TypeError} - If a different argument type was expected
+     * @throws {Error} - If there was a problem with the update operation
      */
-    public async deleteUser(guildId: string | number, userId: string | number): Promise<boolean | Error> {
-        if (typeof guildId === "number") guildId = guildId.toString()
-        if (typeof userId === "number") userId = userId.toString()
+    public async deleteUser(guildId: string | number, userId: string | number): Promise<boolean> {
+        try {
+            guildId = await LevelSystem._validateGuildId(guildId)
+            userId = await LevelSystem._validateUserId(userId)
+        } catch (e) {
+            throw e
+        }
 
         return new Promise(((resolve, reject) => {
-
-            /**
-             * TODO: (Maybe) Insert isUser() check here
-             */
-
             this._model.updateOne(
                 {"_id": guildId},
                 {$unset: {[`users.${userId}`]: undefined}},
                 (e: Error) => {
-                    if (e) reject(e)
-                    resolve(true)
+                    if (e) reject(e);
+                    resolve(true);
                 }
             )
         }))
     }
 
     /**
-     * @param {string} guildId - The ID of the Guild
-     *
-     * @return {Promise<boolean | Error>} - Returns true if the guild was created or an Error if there is one
+     * @param {(string | number)} guildId - The id of the guild
+     * @param {(string | number)} userId - The id of the user
+     * @returns {Promise<boolean>} - Returns true if the user was reset
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {TypeError} - If a different argument type was expected
+     * @throws {Error} - If there was a problem with the update operation
      */
-    public async createGuild(guildId: string | number): Promise<boolean | Error> {
-        if (typeof guildId === "number") guildId = guildId.toString()
-        let guild = new this._model({"_id": guildId, "users": {}})
-        return new Promise((resolve, reject) => {
+    public async resetUser(guildId: string | number, userId: string | number): Promise<boolean> {
+        try {
+            guildId = await LevelSystem._validateGuildId(guildId)
+            userId = await LevelSystem._validateUserId(userId)
+        } catch (e) {
+            throw e
+        }
 
-            /**
-             * TODO: Insert isGuild() check here
-             */
+        return this.setXp(guildId, userId, 0)
+    }
 
-            guild.save((e: Error) => {
-                if (e) reject(e)
+    /**
+     * @param {(string | number)} guildId - The id of the guild
+     * @returns {Promise<boolean>} - Returns true if guild exists and false if it doesn't
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {TypeError} - If a different argument type was expected
+     * @throws {Error} - If there was a problem with the update operation
+     */
+    public async isGuild(guildId: string | number): Promise<boolean> {
+        try {
+            guildId = await LevelSystem._validateGuildId(guildId)
+        } catch (e) {
+            throw e
+        }
+
+        return new Promise(((resolve, reject) => {
+            this._model.findOne({"_id": guildId}).then((result: any) => {
+                if (result === null) resolve(false)
                 resolve(true)
+            }).catch((e: Error) => {
+                reject(e);
+            })
+        }))
+    }
+
+    /**
+     * @param {(string | number)} guildId - The id of the guild
+     * @returns {Promise<boolean | Object>} - Returns the guilds data if it exists or false if he doesn't
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {TypeError} - If a different argument type was expected
+     * @throws {Error} - If there was a problem with the update operation
+     */
+    public async getGuild(guildId: string | number): Promise<boolean | Object> {
+        try {
+            guildId = await LevelSystem._validateGuildId(guildId)
+        } catch (e) {
+            throw e
+        }
+
+        return new Promise(((resolve, reject) => {
+            this._model.findOne({"_id": guildId}).then((result: any) => {
+                if (result === null) resolve(false)
+                resolve(result.users)
+            }).catch((e: Error) => {
+                reject(e);
+            })
+        }))
+    }
+
+    /**
+     * @param {(string | number)} guildId - The id of the guild
+     * @returns {Promise<boolean>} - Returns true if the guild was created
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {TypeError} - If a different argument type was expected
+     * @throws {Error} - If there was a problem with the update operation
+     */
+    public async createGuild(guildId: string | number): Promise<boolean> {
+        try {
+            guildId = await LevelSystem._validateGuildId(guildId)
+        } catch (e) {
+            throw e
+        }
+
+        let guild = new this._model({"_id": guildId, "users": {}});
+        return new Promise((resolve, reject) => {
+            guild.save((e: Error) => {
+                if (e) reject(e);
+                resolve(true);
             })
         })
     }
 
     /**
-     * @param {string} guildId - The ID of the Guild
-     *
-     * @return {Promise<boolean | Error>} - Returns true if the guild was deleted or an Error if there is one
+     * @param {(string | number)} guildId - The id of the guild
+     * @returns {Promise<boolean>} - Returns true if the guild was deleted
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {TypeError} - If a different argument type was expected
+     * @throws {Error} - If there was a problem with the update operation
      */
-    public async deleteGuild(guildId: string | number): Promise<boolean | Error> {
-        if (typeof guildId === "number") guildId = guildId.toString()
+    public async deleteGuild(guildId: string | number): Promise<boolean> {
+        try {
+            guildId = await LevelSystem._validateGuildId(guildId)
+        } catch (e) {
+            throw e
+        }
+
         return new Promise(((resolve, reject) => {
-
-            /**
-             * TODO: (Maybe) Insert isGuild() check here
-             */
-
-            this._model.deleteOne({"_id": guildId}).then((result: any) => {
+            this._model.deleteOne({"_id": guildId}).then(() => {
+                // If you want to know if it actually got delete or if it already was deleted change the first line and add the second line
+                // this._model.deleteOne({"_id": guildId}).then((result: any) => {
                 // result.deletedCount === 0 ? resolve(false) : resolve(true)
-                resolve(true)
+                resolve(true);
             }).catch((e: Error) => {
-                reject(e)
+                reject(e);
             })
         }))
     }
+
+    /**
+     * @param {(string | number)} guildId - The id of the guild
+     * @returns {string} - A valid guildId as a string
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {TypeError} - If a different argument type was expected
+     */
+    private static _validateGuildId(guildId: string | number): string {
+        if (!guildId) throw new MissingArgumentException("Missing parameter \"guildId\"");
+        if (typeof guildId !== "string" && typeof guildId !== "number") throw new TypeError(`Expected type "string" or "number" for <guildId>, got "${typeof guildId}"`);
+        if (typeof guildId === "number") return guildId.toString();
+        return guildId
+    }
+
+    /**
+     * @param {(string | number)} userId - The id of the user
+     * @returns {string} - A valid userId as a string
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {TypeError} - If a different argument type was expected
+     */
+    private static _validateUserId(userId: string | number): string {
+        if (!userId) throw new MissingArgumentException("Missing parameter \"guildId\"");
+        if (typeof userId !== "string" && typeof userId !== "number") throw new TypeError(`Expected type "string" or "number" for <guildId>, got "${typeof userId}"`);
+        if (typeof userId === "number") return userId.toString();
+        return userId
+    }
 }
 
-module.exports = LevelSystem
+module.exports = LevelSystem;
