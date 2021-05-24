@@ -10,7 +10,7 @@
         "declaration": true
     },
     "include": [
-        "src/example.ts",
+        "src/devExample.ts",
         "./src/"
     ]
 }

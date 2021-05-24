@@ -107,6 +107,6 @@ dist
 .idea/
 
 # Remove me in production
-example.js
-example.ts
-example.d.ts
+devExample.js
+devExample.ts
+devExample.d.ts
