@@ -1,7 +1,7 @@
 # Cronos-XP
-A flexible xp based level system framework which uses mongoDB.  
+A flexible XP-based level system framework that uses mongoDB.  
 
-This package was designed for Discord but there is nothing really linking it to discord directly, so if you are searching for a general xp based level system think of guildId as a group name and userId as the individual users. (*Note: guildId has to be unique, and the userId's inside that guild have to be unique as well*)
+This package was designed for Discord but nothing is linking it to discord directly, so if you are searching for a general XP-based level system think of guildId as a group name and userId as the individual users. (*Note: guildId has to be unique, and the userId's inside that guild have to be unique as well*)
 
 
 ## Setup
