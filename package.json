@@ -12,8 +12,8 @@
     "type": "git",
     "url": "git+https://github.com/elttayman-Co/cronos-xp.git"
   },
-  "author": "Renox",
-  "license": "ISC",
+  "author": "Renox (https://github.com/JustRenox)",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/elttayman-Co/cronos-xp/issues"
   },

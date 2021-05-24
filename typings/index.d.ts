@@ -1,21 +1,19 @@
-declare const mongoose: any;
-declare const guildSchema: any;
-declare class MissingArgumentException extends Error {
-    constructor(message: string);
-}
 /**
  * @property {number} [growthMultiplier = 30]
- * @property {number} [startWithZero = true]
+ * @property {boolean} [startWithZero = true]
+ * @property {boolean} [returnDetails = false]
  * @example
  * // growthMultiplier = 0 means x³ and not 0 * x²
  * const DefaultValues = {
  *     growthMultiplier = 30,
  *     startWithZero = true
+ *     returnDetails = true
  * }
  */
 interface ConstructorOptions {
     growthMultiplier?: number;
     startWithZero?: boolean;
+    returnDetails?: boolean;
 }
 /**
  * @property {number} xp
@@ -26,57 +24,86 @@ interface User {
     level: number;
 }
 /**
+ * @property {number} xpDifference
+ * @property {number} levelDifference
+ * @property {number} nextLevelXp
+ * @property {number} currentLevelXp
+ */
+interface Details {
+    xpDifference: number;
+    levelDifference: number;
+    nextLevelXp: number;
+    currentLevelXp: number;
+}
+/**
  * @property {number} newLevel
  * @property {number} newXp
  * @property {number} [hasLevelUp]
  * @property {number} [hasLevelDown]
+ * @property {Details} [details]
  */
 interface AddSubtractReturnObject {
     newLevel: number;
     newXp: number;
     hasLevelUp?: boolean;
     hasLevelDown?: boolean;
+    details?: Details;
 }
 /**
- * TODO:
- *  - Either adding a few Properties to Interface "AddSubtractReturnObject" or a function to get amount of XP till next level
- *  - Test if everything works as its supposed to
- *  - Adding proper example.js file
- *  - Adding a readme.md explaining everything
- *  - Refactoring files etc and create an NPM package
+ * @property {number} xpNeeded
+ * @property {number} currentLevel
+ * @property {number} nextLevel
+ * @property {number} currentLevelXp
+ * @property {number} nextLevelXp
+ */
+interface XpForNextReturnObject {
+    xpNeeded: number;
+    currentLevel: number;
+    nextLevel: number;
+    currentLevelXp: number;
+    nextLevelXp: number;
+}
+/**
+ * A LevelSystem class that works with a mongoDB and allows for quite some flexibility.
+ *
+ * See the {@link https://github.com/elttayman-Co/cronos-xp#readme readme}
  */
 declare class LevelSystem {
     private readonly _model;
     private readonly _growthMultiplier;
     private readonly _startWithZero;
+    private readonly _returnDetails;
     /**
      * @param {string} mongoUrl - The URL to the mongoDB
-     * @param {options} [options] - An optional parameter for options
+     * @param {ConstructorOptions} [options] - A parameter for options
      */
     constructor(mongoUrl: string, options?: ConstructorOptions);
     /**
      * Function that returns the amount of xp needed for a certain level
      * @param {number} targetLevel - The desired level
      * @returns {number} - Amount of xp needed for targetLevel
-     * @throws {TypeError} - If the growthMultiplier isn't a number
      */
     xpForLevel(targetLevel: number): number;
     /**
      * Function that returns the level for a specific amount of xp
      * @param {number} targetXp - The desired xp
      * @returns {number} - The level at this amount of xp
-     * @throws {TypeError} - If the growthMultiplier isn't a number
      */
     levelForXp(targetXp: number): number;
     /**
-     *
+     * Function that returns the amount of xp needed to reach the next level
+     * @param {number} currentXp - The current xp on which the calculations for the next level are based on
+     * @returns {(number | XpForNextReturnObject)} - The amount of xp needed or the current and next level as well as their min required XP
+     */
+    xpForNext(currentXp: number): number | XpForNextReturnObject;
+    /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
      * @param {number} value - The amount of xp which the level and xp are set to
      * @returns {Promise<boolean>} - Returns true if the operation was successful
      * @throws {MissingArgumentException} - If there is a missing argument
      * @throws {TypeError} - If a different argument type was expected
-     * @throws {Error} - If there was a problem with the update operation
+     * @throws {Error} - If the guild or user doesn't exist or if there was a problem with the update operation
      */
     setXp(guildId: string | number, userId: string | number, value: number): Promise<boolean>;
     /**
@@ -86,14 +113,14 @@ declare class LevelSystem {
      * @returns {Promise<boolean>} - Returns true if the operation was successful
      * @throws {MissingArgumentException} - If there is a missing argument
      * @throws {TypeError} - If a different argument type was expected
-     * @throws {Error} - If there was a problem with the update operation
+     * @throws {Error} - If the guild or user doesn't exist or if there was a problem with the update operation
      */
     setLevel(guildId: string | number, userId: string | number, value: number): Promise<boolean>;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
      * @param {number} value - The amount of xp to add to that user
-     * @returns {Promise<AddSubtractReturnObject>} - Returns an object with properties "newLevel", "newXp", "hasLevelUp"
+     * @returns {Promise<AddSubtractReturnObject>} - Returns an object of type "AddSubtractReturnObject"
      * @throws {MissingArgumentException} - If there is a missing argument
      * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If the user couldn't be found or if there was a problem with the update operation
@@ -103,7 +130,7 @@ declare class LevelSystem {
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
      * @param {number} value - The amount of levels to add to that user
-     * @returns {Promise<AddSubtractReturnObject>} - Returns an object with properties "newLevel", "newXp", "hasLevelUp"
+     * @returns {Promise<AddSubtractReturnObject>} - Returns an object of type "AddSubtractReturnObject"
      * @throws {MissingArgumentException} - If there is a missing argument
      * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If the user couldn't be found or if there was a problem with the update operation
@@ -113,7 +140,7 @@ declare class LevelSystem {
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
      * @param {number} value - The amount of xp to remove from that user
-     * @returns {Promise<AddSubtractReturnObject>} - Returns an object with properties "newLevel", "newXp", "hasLevelDown"
+     * @returns {Promise<AddSubtractReturnObject>} - Returns an object of type "AddSubtractReturnObject"
      * @throws {MissingArgumentException} - If there is a missing argument
      * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If the user couldn't be found or if there was a problem with the update operation
@@ -123,7 +150,7 @@ declare class LevelSystem {
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
      * @param {number} value - The amount of levels to remove from that user
-     * @returns {Promise<AddSubtractReturnObject>} - Returns an object with properties "newLevel", "newXp", "hasLevelDown"
+     * @returns {Promise<AddSubtractReturnObject>} - Returns an object of type "AddSubtractReturnObject"
      * @throws {MissingArgumentException} - If there is a missing argument
      * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If the user couldn't be found or if there was a problem with the update operation
@@ -132,15 +159,16 @@ declare class LevelSystem {
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {number} [limit = 10] - The amount of leaderboard entries to return
+     * @param {number} [startingAt = 0] - At which place to start (0 = start from first, 2 = start from third, ...)
      * @returns {Promise<[string, unknown][] | boolean} - Returns an array of arrays that consist of the id as a string and "User" object
      * @example
      * //Returns:
-     * [["id1", {xp: 0, level: 0}],["id2", {xp: 0, level: 0}]]
+     * [["id1", {xp: 0, level: 0}], ["id2", {xp: 0, level: 0}], ...]
      * @throws {MissingArgumentException} - If there is a missing argument
      * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If there was a problem with the update operation
      */
-    getLeaderboard(guildId: string | number, limit?: number): Promise<[string, unknown][] | boolean>;
+    getLeaderboard(guildId: string | number, limit?: number, startingAt?: number): Promise<[string, User][] | boolean>;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
@@ -153,7 +181,7 @@ declare class LevelSystem {
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
-     * @returns {Promise<Object | boolean>} - Returns the users data if he exists or false if he doesn't
+     * @returns {Promise<User | boolean>} - Returns the users data if he exists or false if he doesn't
      * @throws {MissingArgumentException} - If there is a missing argument
      * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If there was a problem with the update operation
@@ -196,15 +224,15 @@ declare class LevelSystem {
     isGuild(guildId: string | number): Promise<boolean>;
     /**
      * @param {(string | number)} guildId - The id of the guild
-     * @returns {Promise<boolean | Object>} - Returns the guilds data if it exists or false if he doesn't
+     * @returns {Promise<boolean | object>} - Returns the guilds data if it exists or false if he doesn't
      * @throws {MissingArgumentException} - If there is a missing argument
      * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If there was a problem with the update operation
      */
-    getGuild(guildId: string | number): Promise<boolean | Object>;
+    getGuild(guildId: string | number): Promise<boolean | object>;
     /**
      * @param {(string | number)} guildId - The id of the guild
-     * @returns {Promise<boolean>} - Returns true if the guild was created
+     * @returns {Promise<boolean>} - Returns true if the guild was created and false if it already exists
      * @throws {MissingArgumentException} - If there is a missing argument
      * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If there was a problem with the update operation
@@ -233,3 +261,4 @@ declare class LevelSystem {
      */
     private static _validateUserId;
 }
+export = LevelSystem;
