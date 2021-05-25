@@ -1,0 +1,9 @@
+# IDE settings
+.idea
+
+# Ignoring Typescript source files
+src
+tsconfig.json
+
+# Gitignore
+.gitignore

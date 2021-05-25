@@ -80,7 +80,6 @@ jspm_packages/
 
 # Nuxt.js build / generate output
 .nuxt
-dist
 
 # Gatsby files
 .cache/
@@ -106,7 +105,7 @@ dist
 # Webstrom IDE Settings
 .idea/
 
-# Remove me in production
+# Testfiles for development
 devExample.js
 devExample.ts
 devExample.d.ts

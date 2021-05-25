@@ -1,4 +1,4 @@
-const cronosXp = require("../out")
+const cronosXp = require("cronos-xp")
 
 let levelSystem = new cronosXp("mongoDBUrlGoesHere", {
     growthMultiplier: 30,
