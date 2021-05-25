@@ -91,7 +91,7 @@ interface XpForNextReturnObject {
 ## Public Instance Methods
 
 If there are any questions about the methods, their parameters, their return types or anything thing else take a look at the Declaration file [index.d.ts](https://github.com/elttayman-Co/cronos-xp/blob/main/dist/index.d.ts)
-or just join our [Discord]()
+or just join our [Discord](https://discord.gg/eXrQv9e699)
 <br/>
 #### xpForLevel()  
 A method that calculates the minimum amount of xp needed for a specific level.
