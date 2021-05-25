@@ -66,7 +66,7 @@ class LevelSystem {
         this._model = mongoose.model("GuildXP", guildSchema, "GuildXP");
     }
     /**
-     * Function that returns the amount of xp needed for a certain level
+     * Method that returns the amount of xp needed for a certain level
      * @param {number} targetLevel - The desired level
      * @returns {number} - Amount of xp needed for targetLevel
      */
@@ -91,7 +91,7 @@ class LevelSystem {
         }
     }
     /**
-     * Function that returns the level for a specific amount of xp
+     * Method that returns the level for a specific amount of xp
      * @param {number} targetXp - The desired xp
      * @returns {number} - The level at this amount of xp
      */
@@ -110,7 +110,7 @@ class LevelSystem {
         }
     }
     /**
-     * Function that returns the amount of xp needed to reach the next level
+     * Method that returns the amount of xp needed to reach the next level
      * @param {number} currentXp - The current xp on which the calculations for the next level are based on
      * @returns {(number | XpForNextReturnObject)} - The amount of xp needed or the current and next level as well as their min required XP
      */

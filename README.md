@@ -1,7 +1,7 @@
-# Cronos-XP
-A flexible XP-based level system framework that uses mongoDB.  
+# Cronos-xp
+A flexible xp-based level system framework that uses mongoDB.  
 
-This package was designed for Discord but nothing is linking it to discord directly, so if you are searching for a general XP-based level system think of guildId as a group name and userId as the individual users. (*Note: guildId has to be unique, and the userId's inside that guild have to be unique as well*)
+This package was designed for Discord but nothing is linking it to discord directly, so if you are searching for a general xp-based level system think of guildId as a group name and userId as the individual users. (*Note: guildId has to be unique, and the userId's inside that guild have to be unique as well*)
 
 
 ## Setup
@@ -37,28 +37,35 @@ This includes:
 * subtractXp()
 * subtractLevel()
 
-For more information take a look at the JSDocs, and the Declaration file (index.d.ts)
+For more information take a look at the Declaration file [index.d.ts](https://github.com/elttayman-Co/cronos-xp/blob/main/dist/index.d.ts)
 
 ## Object Structure
+#### ConstructorOptions
 ```ts
 interface ConstructorOptions {
     growthMultiplier?: number,
     startWithZero?: boolean,
     returnDetails?: boolean
 }
-
+```
+#### User
+```ts
 interface User {
     xp: number,
     level: number
 }
-
+```
+#### Details
+```ts
 interface Details {
     xpDifference: number,
     levelDifference: number,
     nextLevelXp: number,
     currentLevelXp: number
 }
-
+```
+#### AddSubtractReturnObject
+```ts
 interface AddSubtractReturnObject {
     newLevel: number,
     newXp: number,
@@ -66,7 +73,9 @@ interface AddSubtractReturnObject {
     hasLevelDown?: boolean, // Exists on subtractXp or subtractLevel
     details?: Details       // This only exists when `returnDetails` is enabled
 }
-
+```
+#### XpForNextReturnObject
+```ts
 interface XpForNextReturnObject {
     xpNeeded: number,
     currentLevel: number,
@@ -78,133 +87,133 @@ interface XpForNextReturnObject {
 
 ## Public Instance Methods
 
-**xpForLevel()**
+#### xpForLevel()  
 ```js
 LevelSystem.xpForLevel(<targetLevel - number>);
 
 // Returns <number>
 ```
 
-**levelForXp()**
+#### levelForXp()  
 ```js
 LevelSystem.levelForXp(<targetXp - number>);
 
 // Returns <number>
 ```
 
-**xpForNext()**
+#### xpForNext()  
 ```js
 LevelSystem.xpForNext(<currentXp - number>);
 
 // Returns <number> | <object>
 ```
 
-**setXp()**
+#### setXp()  
 ```js
 LevelSystem.setXp(<guildId - string>, <userId - string>, <value - number>);
 
 // Returns <Promise<boolean>>
 ```
 
-**setLevel()**
+#### setLevel()  
 ```js
 LevelSystem.setLevel(<guildId - string>, <userId - string>, <value - number>);
 
 // Returns <Promise<boolean>>
 ```
 
-**addXp()**
+#### addXp()  
 ```js
 LevelSystem.addXp(<guildId - string>, <userId - string>, <value - number>);
 
 // Returns <Promise<object>>
 ```
 
-**addLevel()**
+#### addLevel()  
 ```js
 LevelSystem.addLevel(<guildId - string>, <userId - string>, <value - number>);
 
 // Returns <Promise<object>>
 ```
 
-**subtractXp()**
+#### subtractXp()  
 ```js
 LevelSystem.subtractXp(<guildId - string>, <userId - string>, <value - number>);
 
 // Returns <Promise<object>>
 ```
 
-**subtractLevel()**
+#### subtractLevel()  
 ```js
 LevelSystem.subtractLevel(<guildId - string>, <userId - string>, <value - number>);
 
 // Returns <Promise<object>>
 ```
 
-**getLeaderboard()**
+#### getLeaderboard()  
 ```js
 LevelSystem.getLeaderboard(<guildId - string>, [<limit? - number>], [<startingAt? - number>]);
 
 // Returns <Promise<[string, object][] | boolean>>
 ```
 
-**isUser()**
+#### isUser()  
 ```js
 LevelSystem.isUser(<guildId - string>, <userId - string>);
 
 // Returns <Promise<boolean>>
 ```
 
-**getUser()**
+#### getUser()  
 ```js
 LevelSystem.getUser(<guildId - string>, <userId - string>);
 
 // Returns <Promise<object | boolean>>
 ```
 
-**createUser()**
+#### createUser()  
 ```js
 LevelSystem.createUser(<guildId - string>, <userId - string>);
 
 // Returns <Promise<boolean>>
 ```
 
-**deleteUser()**
+#### deleteUser()  
 ```js
 LevelSystem.deleteUser(<guildId - string>, <userId - string>);
 
 // Returns <Promise<boolean>>
 ```
 
-**resetUser()**
+#### resetUser()  
 ```js
 LevelSystem.resetUser(<guildId - string>, <userId - string>);
 
 // Returns <Promise<boolean>>
 ```
 
-**isGuild()**
+#### isGuild()  
 ```js
 LevelSystem.isGuild(<guildId - string>);
 
 // Returns <Promise<boolean>>
 ```
 
-**getGuild()**
+#### getGuild()  
 ```js
 LevelSystem.getGuild(<guildId - string>);
 
 // Returns <Promise<boolean | object>>
 ```
 
-**createGuild()**
+#### createGuild()  
 ```js
 LevelSystem.createGuild(<guildId - string>);
 
 // Returns <Promise<boolean>>
 ```
 
-**deleteGuild()**
+#### deleteGuild()  
 ```js
 LevelSystem.deleteGuild(<guildId - string>);
 
@@ -215,14 +224,14 @@ LevelSystem.deleteGuild(<guildId - string>);
 
 Those methods are just for validating function arguments  
 
-**_validateGuildId()**
+#### _validateGuildId()  
 ```js
 LevelSystem._validateGuildId(<guildId - string | number>);
 
 // Returns <string>
 ```
 
-**_validateUserId()**
+#### _validateUserId()  
 ```js
 LevelSystem._validateUserId(<userId - string | number>);
 
