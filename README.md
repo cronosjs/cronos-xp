@@ -36,11 +36,11 @@ In order to have it start with `1` set this property to `false`.
 **returnDetails:**  
 If this option is on some functions will return more information than they normally do.  
 This includes:  
-* [xpForNext()](https://github.com/cronos-team/cronos-xp#xpfornext)
-* [addXp()](https://github.com/cronos-team/cronos-xp#addxp)
-* [addLevel()](https://github.com/cronos-team/cronos-xp#addlevel)
-* [subtractXp()](https://github.com/cronos-team/cronos-xp#subtractxp)
-* [subtractLevel()](https://github.com/cronos-team/cronos-xp#subtractlevel)
+* [xpForNext()](#xpfornext)
+* [addXp()](#addxp)
+* [addLevel()](#addlevel)
+* [subtractXp()](#subtractxp)
+* [subtractLevel()](#subtractlevel)
 
 For more information take a look at the Declaration file [index.d.ts](https://github.com/cronos-team/cronos-xp/blob/main/dist/index.d.ts)
 
@@ -114,7 +114,7 @@ Level.levelForXp(<targetXp - number>);
 #### xpForNext()  
 A method that calculates the amount of xp needed to reach the next level based on the current xp.
 
-If `returnDetails` is true this will return an object of type [XpForNextReturnObject](https://github.com/cronos-team/cronos-xp#xpfornextreturnobject).
+If `returnDetails` is true this will return an object of type [XpForNextReturnObject](#xpfornextreturnobject).
 ```js
 Level.xpForNext(<currentXp - number>);
 
@@ -139,9 +139,9 @@ Level.setLevel(<guildId - string>, <userId - string>, <value - number>);
 
 #### addXp()  
 A method that adds a specific amount of xp to a specific user in a specific guild.
-Returns object of type [AddSubtractReturnObject](https://github.com/cronos-team/cronos-xp#addsubtractreturnobject)
+Returns object of type [AddSubtractReturnObject](#addsubtractreturnobject)
 
-If `returnDetails` is true the returned object will have a `details` property that looks like [this](https://github.com/cronos-team/cronos-xp#details).
+If `returnDetails` is true the returned object will have a `details` property that looks like [this](#details).
 ```js
 Level.addXp(<guildId - string>, <userId - string>, <value - number>);
 
@@ -150,9 +150,9 @@ Level.addXp(<guildId - string>, <userId - string>, <value - number>);
 
 #### addLevel()  
 A method that adds a specific amount of level to a specific user in a specific guild.
-Returns object of type [AddSubtractReturnObject](https://github.com/cronos-team/cronos-xp#addsubtractreturnobject)
+Returns object of type [AddSubtractReturnObject](#addsubtractreturnobject)
 
-If `returnDetails` is true the returned object will have a `details` property that looks like [this](https://github.com/cronos-team/cronos-xp#details).
+If `returnDetails` is true the returned object will have a `details` property that looks like [this](#details).
 ```js
 Level.addLevel(<guildId - string>, <userId - string>, <value - number>);
 
@@ -161,9 +161,9 @@ Level.addLevel(<guildId - string>, <userId - string>, <value - number>);
 
 #### subtractXp()  
 A method that subtracts a specific amount of xp from a specific user in a specific guild.
-Returns object of type [AddSubtractReturnObject](https://github.com/cronos-team/cronos-xp#addsubtractreturnobject)
+Returns object of type [AddSubtractReturnObject](#addsubtractreturnobject)
 
-If `returnDetails` is true the returned object will have a `details` property that looks like [this](https://github.com/cronos-team/cronos-xp#details).
+If `returnDetails` is true the returned object will have a `details` property that looks like [this](#details).
 ```js
 Level.subtractXp(<guildId - string>, <userId - string>, <value - number>);
 
@@ -172,9 +172,9 @@ Level.subtractXp(<guildId - string>, <userId - string>, <value - number>);
 
 #### subtractLevel()
 A method that subtracts a specific amount of level from a specific user in a specific guild.
-Returns object of type [AddSubtractReturnObject](https://github.com/cronos-team/cronos-xp#addsubtractreturnobject)
+Returns object of type [AddSubtractReturnObject](#addsubtractreturnobject)
 
-If `returnDetails` is true the returned object will have a `details` property that looks like [this](https://github.com/cronos-team/cronos-xp#details).
+If `returnDetails` is true the returned object will have a `details` property that looks like [this](#details).
 ```js
 Level.subtractLevel(<guildId - string>, <userId - string>, <value - number>);
 
@@ -187,7 +187,7 @@ A method that returns the top users of a guild sorted by their amount of xp.
 `startingAt` is an option parameter to change where the list of returned users start *(Default: 0)*.  
 *(If `startingAt` is 2 for example it will start with the third place.)*
 
-Returns an array of arrays that contain a string being the userid and, an object of type [User](https://github.com/cronos-team/cronos-xp#user).
+Returns an array of arrays that contain a string being the userid and, an object of type [User](#user).
 ```js
 Level.getLeaderboard(<guildId - string>[, <limit? - number>, <startingAt? - number>]);
 
@@ -205,7 +205,7 @@ Level.isUser(<guildId - string>, <userId - string>);
 #### getUser()  
 A method to get the data of a specific user in a specific guild.
 
-If the user exists it returns an object of type [User](https://github.com/cronos-team/cronos-xp#user).
+If the user exists it returns an object of type [User](#user).
 ```js
 Level.getUser(<guildId - string>, <userId - string>);
 
@@ -247,7 +247,7 @@ Level.isGuild(<guildId - string>);
 #### getGuild()  
 A method to get all users of a guild.
 
-Returns an object that uses the userid's as the key and has their user object of type [User](https://github.com/cronos-team/cronos-xp#user) as their value.
+Returns an object that uses the userid's as the key and has their user object of type [User](#user) as their value.
 ```js
 Level.getGuild(<guildId - string>);
 
