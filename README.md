@@ -22,7 +22,9 @@ const LevelSystem = new CronosXp("mongoDBUrlGoesHere", {
 
 **growthMultiplier:**  
 The XP needed for a level is calculated with the function ``ƒ(x) = g * x²`` where `g = growthMultiplier`.  
-(A growthMultiplier of `0` equals `x`, turning the function into ``ƒ(x) = x³``)
+(A growthMultiplier of `0` equals `x`, turning the function into ``ƒ(x) = x³``)  
+*High `growthMultiplier` = rapid increase in the amount of xp needed for the next level.*  
+*Low `growthMultiplier` = slow increase in the amount of xp needed for the next level.*
 
 **startWithZero:**  
 Since ``ƒ(0) = g * 0²`` equals `0` the starting level would be `0`.  
@@ -32,11 +34,11 @@ In order to have it start with `1` set this property to `false`.
 **returnDetails:**  
 If this option is on some functions will return more information than they normally do.  
 This includes:  
-* xpForNext()
-* addXp()
-* addLevel()
-* subtractXp()
-* subtractLevel()
+* [xpForNext()](https://github.com/elttayman-Co/cronos-xp#xpfornext)
+* [addXp()](https://github.com/elttayman-Co/cronos-xp#addxp)
+* [addLevel()](https://github.com/elttayman-Co/cronos-xp#addlevel)
+* [subtractXp()](https://github.com/elttayman-Co/cronos-xp#subtractxp)
+* [subtractLevel()](https://github.com/elttayman-Co/cronos-xp#subtractlevel)
 
 For more information take a look at the Declaration file [index.d.ts](https://github.com/elttayman-Co/cronos-xp/blob/main/dist/index.d.ts)
 
@@ -88,7 +90,11 @@ interface XpForNextReturnObject {
 
 ## Public Instance Methods
 
+If there are any questions about the methods, their parameters, their return types or anything thing else take a look at the Declaration file [index.d.ts](https://github.com/elttayman-Co/cronos-xp/blob/main/dist/index.d.ts)
+or just join our [Discord]()
+<br/>
 #### xpForLevel()  
+A method that calculates the minimum amount of xp needed for a specific level.
 ```js
 LevelSystem.xpForLevel(<targetLevel - number>);
 
@@ -96,6 +102,7 @@ LevelSystem.xpForLevel(<targetLevel - number>);
 ```
 
 #### levelForXp()  
+A method that calculates the level for a specific amount of xp.
 ```js
 LevelSystem.levelForXp(<targetXp - number>);
 
@@ -103,13 +110,17 @@ LevelSystem.levelForXp(<targetXp - number>);
 ```
 
 #### xpForNext()  
+A method that calculates the amount of xp needed to reach the next level based on the current xp.
+
+If `returnDetails` is true this will return an object of type [XpForNextReturnObject](https://github.com/elttayman-Co/cronos-xp#xpfornextreturnobject).
 ```js
 LevelSystem.xpForNext(<currentXp - number>);
 
-// Returns <number> | <object>
+// Returns <number> | <XpForNextReturnObject>
 ```
 
 #### setXp()  
+A method to set the amount of xp for a specific user inside a specific guild.
 ```js
 LevelSystem.setXp(<guildId - string>, <userId - string>, <value - number>);
 
@@ -117,6 +128,7 @@ LevelSystem.setXp(<guildId - string>, <userId - string>, <value - number>);
 ```
 
 #### setLevel()  
+A method to set the level for a specific user inside a specific guild.
 ```js
 LevelSystem.setLevel(<guildId - string>, <userId - string>, <value - number>);
 
@@ -124,41 +136,64 @@ LevelSystem.setLevel(<guildId - string>, <userId - string>, <value - number>);
 ```
 
 #### addXp()  
+A method that adds a specific amount of xp to a specific user in a specific guild.
+Returns object of type [AddSubtractReturnObject](https://github.com/elttayman-Co/cronos-xp#addsubtractreturnobject)
+
+If `returnDetails` is true the returned object will have a `details` property that looks like [this](https://github.com/elttayman-Co/cronos-xp#details).
 ```js
 LevelSystem.addXp(<guildId - string>, <userId - string>, <value - number>);
 
-// Returns <Promise<object>>
+// Returns <Promise<AddSubtractReturnObject>>
 ```
 
 #### addLevel()  
+A method that adds a specific amount of level to a specific user in a specific guild.
+Returns object of type [AddSubtractReturnObject](https://github.com/elttayman-Co/cronos-xp#addsubtractreturnobject)
+
+If `returnDetails` is true the returned object will have a `details` property that looks like [this](https://github.com/elttayman-Co/cronos-xp#details).
 ```js
 LevelSystem.addLevel(<guildId - string>, <userId - string>, <value - number>);
 
-// Returns <Promise<object>>
+// Returns <Promise<AddSubtractReturnObject>>
 ```
 
 #### subtractXp()  
+A method that subtracts a specific amount of xp from a specific user in a specific guild.
+Returns object of type [AddSubtractReturnObject](https://github.com/elttayman-Co/cronos-xp#addsubtractreturnobject)
+
+If `returnDetails` is true the returned object will have a `details` property that looks like [this](https://github.com/elttayman-Co/cronos-xp#details).
 ```js
 LevelSystem.subtractXp(<guildId - string>, <userId - string>, <value - number>);
 
-// Returns <Promise<object>>
+// Returns <Promise<AddSubtractReturnObject>>
 ```
 
-#### subtractLevel()  
+#### subtractLevel()
+A method that subtracts a specific amount of level from a specific user in a specific guild.
+Returns object of type [AddSubtractReturnObject](https://github.com/elttayman-Co/cronos-xp#addsubtractreturnobject)
+
+If `returnDetails` is true the returned object will have a `details` property that looks like [this](https://github.com/elttayman-Co/cronos-xp#details).
 ```js
 LevelSystem.subtractLevel(<guildId - string>, <userId - string>, <value - number>);
 
-// Returns <Promise<object>>
+// Returns <Promise<AddSubtractReturnObject>>
 ```
 
 #### getLeaderboard()  
-```js
-LevelSystem.getLeaderboard(<guildId - string>, [<limit? - number>], [<startingAt? - number>]);
+A method that returns the top users of a guild sorted by their amount of xp.  
+`limit` is an option parameter to change the amount of users that are being returned *(Default: 10)*.  
+`startingAt` is an option parameter to change where the list of returned users start *(Default: 0)*.  
+*(If `startingAt` is 2 for example it will start with the third place.)*
 
-// Returns <Promise<[string, object][] | boolean>>
+Returns an array of arrays that contain a string being the userid and, an object of type [User](https://github.com/elttayman-Co/cronos-xp#user).
+```js
+LevelSystem.getLeaderboard(<guildId - string>[, <limit? - number>, <startingAt? - number>]);
+
+// Returns <Promise<[string, User][] | boolean>>
 ```
 
 #### isUser()  
+A method to find out if a specific user exists in a specific guild.
 ```js
 LevelSystem.isUser(<guildId - string>, <userId - string>);
 
@@ -166,13 +201,17 @@ LevelSystem.isUser(<guildId - string>, <userId - string>);
 ```
 
 #### getUser()  
+A method to get the data of a specific user in a specific guild.
+
+If the user exists it returns an object of type [User](https://github.com/elttayman-Co/cronos-xp#user).
 ```js
 LevelSystem.getUser(<guildId - string>, <userId - string>);
 
-// Returns <Promise<object | boolean>>
+// Returns <Promise<User | boolean>>
 ```
 
 #### createUser()  
+A method to create a new user in a specific guild.
 ```js
 LevelSystem.createUser(<guildId - string>, <userId - string>);
 
@@ -180,6 +219,7 @@ LevelSystem.createUser(<guildId - string>, <userId - string>);
 ```
 
 #### deleteUser()  
+A method to delete a user in a specific guild.
 ```js
 LevelSystem.deleteUser(<guildId - string>, <userId - string>);
 
@@ -187,6 +227,7 @@ LevelSystem.deleteUser(<guildId - string>, <userId - string>);
 ```
 
 #### resetUser()  
+A method to reset a users xp and level inside a specific guild
 ```js
 LevelSystem.resetUser(<guildId - string>, <userId - string>);
 
@@ -194,6 +235,7 @@ LevelSystem.resetUser(<guildId - string>, <userId - string>);
 ```
 
 #### isGuild()  
+A method to find out if a specific guild exists.
 ```js
 LevelSystem.isGuild(<guildId - string>);
 
@@ -201,6 +243,9 @@ LevelSystem.isGuild(<guildId - string>);
 ```
 
 #### getGuild()  
+A method to get all users of a guild.
+
+Returns an object that uses the userid's as the key and has their user object of type [User](https://github.com/elttayman-Co/cronos-xp#user) as their value.
 ```js
 LevelSystem.getGuild(<guildId - string>);
 
@@ -208,6 +253,7 @@ LevelSystem.getGuild(<guildId - string>);
 ```
 
 #### createGuild()  
+A method to create a new guild.
 ```js
 LevelSystem.createGuild(<guildId - string>);
 
@@ -215,6 +261,7 @@ LevelSystem.createGuild(<guildId - string>);
 ```
 
 #### deleteGuild()  
+A method to delete a specific guild.
 ```js
 LevelSystem.deleteGuild(<guildId - string>);
 

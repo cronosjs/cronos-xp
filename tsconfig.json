@@ -10,7 +10,9 @@
         "declaration": true
     },
     "include": [
-        "src/devExample.ts",
         "./src/"
+    ],
+    "exclude": [
+        "./dist/"
     ]
 }
