@@ -421,7 +421,7 @@ class LevelSystem {
      * @param {(string | number)} guildId - The id of the guild
      * @param {number} [limit = 10] - The amount of leaderboard entries to return
      * @param {number} [startingAt = 0] - At which place to start (0 = start from first, 2 = start from third, ...)
-     * @returns {Promise<[string, unknown][] | boolean} - Returns an array of arrays that consist of the id as a string and "User" object
+     * @returns {Promise<[string, User][]> | boolean} - Returns an array of arrays that consist of the id as a string and "User" object
      * @example
      * //Returns:
      * [["id1", {xp: 0, level: 0}], ["id2", {xp: 0, level: 0}], ...]
