@@ -10,6 +10,7 @@ tsconfig.json
 .github/ISSUE_TEMPLATE
 
 # Test files for development
+src/td-list.js
 src/devExample.ts
 dist/devExample.js
 dist/devExample.d.ts

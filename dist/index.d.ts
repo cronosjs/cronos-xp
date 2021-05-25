@@ -246,6 +246,7 @@ declare class LevelSystem {
      * @throws {Error} - If there was a problem with the update operation
      */
     deleteGuild(guildId: string | number): Promise<boolean>;
+    resetGuild(guildId: string | number): Promise<boolean>;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @returns {string} - A valid guildId as a string

@@ -786,6 +786,29 @@ class LevelSystem {
         }))
     }
 
+    public async resetGuild(guildId: string | number): Promise<boolean>{
+        try {
+            guildId = await LevelSystem._validateGuildId(guildId);
+        } catch (e) {
+            throw e;
+        }
+
+        return new Promise(((resolve, reject) => {
+            this._model.updateOne(
+                {"_id": guildId},
+                {
+                    $unset: {
+                        users: {}
+                    }
+                },
+                (e: Error) => {
+                    if (e) reject(e);
+                    resolve(true);
+                }
+            )
+        }))
+    }
+
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @returns {string} - A valid guildId as a string

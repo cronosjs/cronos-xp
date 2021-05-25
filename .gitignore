@@ -106,6 +106,7 @@ jspm_packages/
 .idea/
 
 # Test files for development
-dist/devExample.js
+src/td-list.js
 src/devExample.ts
+dist/devExample.js
 dist/devExample.d.ts
