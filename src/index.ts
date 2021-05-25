@@ -214,7 +214,6 @@ class LevelSystem {
      * @param {number} value - The amount of xp which the level and xp are set to
      * @returns {Promise<boolean>} - Returns true if the operation was successful
      * @throws {MissingArgumentException} - If there is a missing argument
-     * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If the guild or user doesn't exist or if there was a problem with the update operation
      */
     public async setXp(guildId: string | number, userId: string | number, value: number): Promise<boolean> {
@@ -251,7 +250,6 @@ class LevelSystem {
      * @param {number} value - The level which the level and xp are set to
      * @returns {Promise<boolean>} - Returns true if the operation was successful
      * @throws {MissingArgumentException} - If there is a missing argument
-     * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If the guild or user doesn't exist or if there was a problem with the update operation
      */
     public async setLevel(guildId: string | number, userId: string | number, value: number): Promise<boolean> {
@@ -288,7 +286,6 @@ class LevelSystem {
      * @param {number} value - The amount of xp to add to that user
      * @returns {Promise<AddSubtractReturnObject>} - Returns an object of type "AddSubtractReturnObject"
      * @throws {MissingArgumentException} - If there is a missing argument
-     * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If the user couldn't be found or if there was a problem with the update operation
      */
     public async addXp(guildId: string | number, userId: string | number, value: number): Promise<AddSubtractReturnObject> {
@@ -345,7 +342,6 @@ class LevelSystem {
      * @param {number} value - The amount of levels to add to that user
      * @returns {Promise<AddSubtractReturnObject>} - Returns an object of type "AddSubtractReturnObject"
      * @throws {MissingArgumentException} - If there is a missing argument
-     * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If the user couldn't be found or if there was a problem with the update operation
      */
     public async addLevel(guildId: string | number, userId: string | number, value: number): Promise<AddSubtractReturnObject> {
@@ -402,7 +398,6 @@ class LevelSystem {
      * @param {number} value - The amount of xp to remove from that user
      * @returns {Promise<AddSubtractReturnObject>} - Returns an object of type "AddSubtractReturnObject"
      * @throws {MissingArgumentException} - If there is a missing argument
-     * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If the user couldn't be found or if there was a problem with the update operation
      */
     public async subtractXp(guildId: string | number, userId: string | number, value: number): Promise<AddSubtractReturnObject> {
@@ -459,7 +454,6 @@ class LevelSystem {
      * @param {number} value - The amount of levels to remove from that user
      * @returns {Promise<AddSubtractReturnObject>} - Returns an object of type "AddSubtractReturnObject"
      * @throws {MissingArgumentException} - If there is a missing argument
-     * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If the user couldn't be found or if there was a problem with the update operation
      */
     public async subtractLevel(guildId: string | number, userId: string | number, value: number): Promise<AddSubtractReturnObject> {
@@ -521,7 +515,6 @@ class LevelSystem {
      * //Returns:
      * [["id1", {xp: 0, level: 0}], ["id2", {xp: 0, level: 0}], ...]
      * @throws {MissingArgumentException} - If there is a missing argument
-     * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If there was a problem with the update operation
      */
     public async getLeaderboard(guildId: string | number, limit?: number, startingAt?: number): Promise<[string, User][] | boolean> {
@@ -554,7 +547,6 @@ class LevelSystem {
      * @param {(string | number)} userId - The id of the user
      * @returns {Promise<boolean>} - Returns true if user exists and false if he doesn't
      * @throws {MissingArgumentException} - If there is a missing argument
-     * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If there was a problem with the update operation
      */
     public async isUser(guildId: string | number, userId: string | number): Promise<boolean> {
@@ -580,7 +572,6 @@ class LevelSystem {
      * @param {(string | number)} userId - The id of the user
      * @returns {Promise<User | boolean>} - Returns the users data if he exists or false if he doesn't
      * @throws {MissingArgumentException} - If there is a missing argument
-     * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If there was a problem with the update operation
      */
     public async getUser(guildId: string | number, userId: string | number): Promise<User | boolean> {
@@ -613,7 +604,6 @@ class LevelSystem {
      * @param {(string | number)} userId - The id of the user
      * @returns {Promise<boolean>} - Returns true if the user was created
      * @throws {MissingArgumentException} - If there is a missing argument
-     * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If there already is a user with this id in this guild or if there was a problem with the update operation
      */
     public async createUser(guildId: string | number, userId: string | number): Promise<boolean> {
@@ -644,7 +634,6 @@ class LevelSystem {
      * @param {(string | number)} userId - The id of the user
      * @returns {Promise<boolean>} - Returns true if the user was deleted
      * @throws {MissingArgumentException} - If there is a missing argument
-     * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If there was a problem with the update operation
      */
     public async deleteUser(guildId: string | number, userId: string | number): Promise<boolean> {
@@ -672,7 +661,6 @@ class LevelSystem {
      * @param {(string | number)} userId - The id of the user
      * @returns {Promise<boolean>} - Returns true if the user was reset
      * @throws {MissingArgumentException} - If there is a missing argument
-     * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If there was a problem with the update operation
      */
     public async resetUser(guildId: string | number, userId: string | number): Promise<boolean> {
@@ -690,7 +678,6 @@ class LevelSystem {
      * @param {(string | number)} guildId - The id of the guild
      * @returns {Promise<boolean>} - Returns true if guild exists and false if it doesn't
      * @throws {MissingArgumentException} - If there is a missing argument
-     * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If there was a problem with the update operation
      */
     public async isGuild(guildId: string | number): Promise<boolean> {
@@ -714,7 +701,6 @@ class LevelSystem {
      * @param {(string | number)} guildId - The id of the guild
      * @returns {Promise<boolean | object>} - Returns the guilds data if it exists or false if he doesn't
      * @throws {MissingArgumentException} - If there is a missing argument
-     * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If there was a problem with the update operation
      */
     public async getGuild(guildId: string | number): Promise<boolean | object> {
@@ -738,7 +724,6 @@ class LevelSystem {
      * @param {(string | number)} guildId - The id of the guild
      * @returns {Promise<boolean>} - Returns true if the guild was created and false if it already exists
      * @throws {MissingArgumentException} - If there is a missing argument
-     * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If there was a problem with the update operation
      */
     public async createGuild(guildId: string | number): Promise<boolean> {
@@ -764,7 +749,6 @@ class LevelSystem {
      * @param {(string | number)} guildId - The id of the guild
      * @returns {Promise<boolean>} - Returns true if the guild was deleted
      * @throws {MissingArgumentException} - If there is a missing argument
-     * @throws {TypeError} - If a different argument type was expected
      * @throws {Error} - If there was a problem with the update operation
      */
     public async deleteGuild(guildId: string | number): Promise<boolean> {
@@ -786,6 +770,13 @@ class LevelSystem {
         }))
     }
 
+
+    /**
+     * @param {(string | number)} guildId - The id of the guild
+     * @returns {Promise<boolean>} - Returns true if the guild was reset
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {Error} - If there was a problem with the update operation
+     */
     public async resetGuild(guildId: string | number): Promise<boolean>{
         try {
             guildId = await LevelSystem._validateGuildId(guildId);
@@ -813,7 +804,6 @@ class LevelSystem {
      * @param {(string | number)} guildId - The id of the guild
      * @returns {string} - A valid guildId as a string
      * @throws {MissingArgumentException} - If there is a missing argument
-     * @throws {TypeError} - If a different argument type was expected
      */
     private static _validateGuildId(guildId: string | number): string {
         if (!guildId) throw new MissingArgumentException("Missing parameter \"guildId\"");
@@ -825,7 +815,6 @@ class LevelSystem {
      * @param {(string | number)} userId - The id of the user
      * @returns {string} - A valid userId as a string
      * @throws {MissingArgumentException} - If there is a missing argument
-     * @throws {TypeError} - If a different argument type was expected
      */
     private static _validateUserId(userId: string | number): string {
         if (!userId) throw new MissingArgumentException("Missing parameter \"guildId\"");
