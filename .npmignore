@@ -5,5 +5,11 @@
 src
 tsconfig.json
 
-# Gitignore
+# Github Stuff
 .gitignore
+.github/ISSUE_TEMPLATE
+
+# Test files for development
+src/devExample.ts
+dist/devExample.js
+dist/devExample.d.ts

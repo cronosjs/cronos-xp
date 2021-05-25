@@ -105,7 +105,7 @@ jspm_packages/
 # Webstrom IDE Settings
 .idea/
 
-# Testfiles for development
-devExample.js
-devExample.ts
-devExample.d.ts
+# Test files for development
+dist/devExample.js
+src/devExample.ts
+dist/devExample.d.ts
