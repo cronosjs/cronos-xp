@@ -24,8 +24,8 @@ const Level = new CronosXp("mongoDBUrlGoesHere", {
 The XP needed for a level is calculated with the function ``ƒ(x) = g * x²`` where `g = growthMultiplier`.  
 (A growthMultiplier of `0` equals `x`, turning the function into ``ƒ(x) = x³``)  
 
-*Noob tip:* 
-*High `growthMultiplier` = rapid increase in the amount of xp needed for the next level.*  
+*Noob tip:*
+*High `growthMultiplier` = rapid increase in the amount of xp needed for the next level.*
 *Low `growthMultiplier` = slow increase in the amount of xp needed for the next level.*
 
 **startWithZero:**  
