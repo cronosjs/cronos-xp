@@ -1,5 +1,6 @@
-# <h1 align="center">TCronos-xp</h1>
-<h1 align="center">A flexible xp-based level system framework that uses mongoDB./h1>  
+# <h1 align="center">Cronos-xp</h1>
+
+<h1 align="center">A flexible xp-based level system framework that uses mongoDB</h1>  
 
 This package was designed for [Discord](https://www.discord.com) but nothing is linking it to discord directly, so if you are searching for a general xp-based level system think of guildId as a group name and userId as the individual users. (*Note: guildId has to be unique, and the userId's inside that guild have to be unique as well*)
 
