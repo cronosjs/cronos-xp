@@ -23,7 +23,9 @@
     "xp",
     "mongo",
     "mongoose",
-    "mongodb"
+    "mongodb",
+    "discord",
+    "javascript"
   ],
   "homepage": "https://github.com/cronos-team/cronos-xp#readme",
   "devDependencies": {
