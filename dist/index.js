@@ -592,6 +592,13 @@ class LevelSystem {
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @returns {Promise<boolean | object>} - Returns the guilds data if it exists or false if he doesn't
+     * @example
+     * //Returns:
+     * {
+     *     "123": {xp: 0, level: 0},
+     *     "456": {xp: 0, level: 0},
+     *     "789": {xp: 0, level: 0}
+     * }
      * @throws {MissingArgumentException} - If there is a missing argument
      * @throws {Error} - If there was a problem with the update operation
      */
