@@ -30,7 +30,7 @@ The XP needed for a level is calculated with the function ``ƒ(x) = g * x²`` wh
 
 **startWithZero:**  
 Since ``ƒ(0) = g * 0²`` equals `0` the starting level would be `0`.  
-In order to have it start with `1` set this property to `false`.  
+To have it start with level `1` set this property to `false`.  
 (This changes the function to ``ƒ(x) = g * x² - g`` or ``ƒ(x) = x³ - x``)
 
 **returnDetails:**  
@@ -183,8 +183,8 @@ Level.subtractLevel(<guildId - string>, <userId - string>, <value - number>);
 
 #### getLeaderboard()  
 A method that returns the top users of a guild sorted by their amount of xp.  
-`limit` is an option parameter to change the amount of users that are being returned *(Default: 10)*.  
-`startingAt` is an option parameter to change where the list of returned users start *(Default: 0)*.  
+`limit` is an optional parameter to change the number of users that are being returned *(Default: 10)*.  
+`startingAt` is an optional parameter to change where the list of returned users start *(Default: 0)*.  
 *(If `startingAt` is 2 for example it will start with the third place.)*
 
 Returns an array of arrays that contain a string being the userid and, an object of type [User](#user).
