@@ -1,5 +1,5 @@
 # <h1 align="center">Cronos-xp</h1>
-<p align="center"><a href="https://discord.gg/eXrQv9e699"><img src="https://discord.com/api/guilds/841765316619141190/widget.png" alt="Discord server"/></a></p>  
+<p style="text-align: center"><a href="https://discord.gg/eXrQv9e699"><img src="https://discord.com/api/guilds/841765316619141190/widget.png" alt="Discord server"/></a></p>  
 
 A flexible xp-based level system framework that uses mongoDB
   
