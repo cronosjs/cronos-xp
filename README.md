@@ -96,30 +96,6 @@ interface XpForNextReturnObject {
 If there are any questions about the methods, their parameters, their return types or anything thing else take a look at the Declaration file [index.d.ts](https://github.com/cronos-team/cronos-xp/blob/main/dist/index.d.ts)
 or just join our [Discord](https://discord.gg/eXrQv9e699)
 <br/>
-#### createUser()  
-A method to create a new user in a specific guild.
-```js
-Level.createUser(<guildId - string>, <userId - string>);
-
-// Returns <Promise<boolean>>
-```
-
-#### deleteUser()  
-A method to delete a user in a specific guild.
-```js
-Level.deleteUser(<guildId - string>, <userId - string>);
-
-// Returns <Promise<boolean>>
-```
-
-#### resetUser()  
-A method to reset a users xp and level inside a specific guild
-```js
-Level.resetUser(<guildId - string>, <userId - string>);
-
-// Returns <Promise<boolean>>
-```
-
 #### xpForLevel()  
 A method that calculates the minimum amount of xp needed for a specific level.
 ```js
@@ -154,6 +130,14 @@ Level.setXp(<guildId - string>, <userId - string>, <value - number>);
 // Returns <Promise<boolean>>
 ```
 
+#### setLevel()  
+A method to set the level for a specific user inside a specific guild.
+```js
+Level.setLevel(<guildId - string>, <userId - string>, <value - number>);
+
+// Returns <Promise<boolean>>
+```
+
 #### addXp()  
 A method that adds a specific amount of xp to a specific user in a specific guild.
 Returns object of type [AddSubtractReturnObject](#addsubtractreturnobject)
@@ -165,25 +149,6 @@ Level.addXp(<guildId - string>, <userId - string>, <value - number>);
 // Returns <Promise<AddSubtractReturnObject>>
 ```
 
-#### subtractXp()  
-A method that subtracts a specific amount of xp from a specific user in a specific guild.
-Returns object of type [AddSubtractReturnObject](#addsubtractreturnobject)
-
-If `returnDetails` is true the returned object will have a `details` property that looks like [this](#details).
-```js
-Level.subtractXp(<guildId - string>, <userId - string>, <value - number>);
-
-// Returns <Promise<AddSubtractReturnObject>>
-```
-
-#### setLevel()  
-A method to set the level for a specific user inside a specific guild.
-```js
-Level.setLevel(<guildId - string>, <userId - string>, <value - number>);
-
-// Returns <Promise<boolean>>
-```
-
 #### addLevel()  
 A method that adds a specific amount of level to a specific user in a specific guild.
 Returns object of type [AddSubtractReturnObject](#addsubtractreturnobject)
@@ -191,6 +156,17 @@ Returns object of type [AddSubtractReturnObject](#addsubtractreturnobject)
 If `returnDetails` is true the returned object will have a `details` property that looks like [this](#details).
 ```js
 Level.addLevel(<guildId - string>, <userId - string>, <value - number>);
+
+// Returns <Promise<AddSubtractReturnObject>>
+```
+
+#### subtractXp()  
+A method that subtracts a specific amount of xp from a specific user in a specific guild.
+Returns object of type [AddSubtractReturnObject](#addsubtractreturnobject)
+
+If `returnDetails` is true the returned object will have a `details` property that looks like [this](#details).
+```js
+Level.subtractXp(<guildId - string>, <userId - string>, <value - number>);
 
 // Returns <Promise<AddSubtractReturnObject>>
 ```
@@ -235,6 +211,30 @@ If the user exists it returns an object of type [User](#user).
 Level.getUser(<guildId - string>, <userId - string>);
 
 // Returns <Promise<User | boolean>>
+```
+
+#### createUser()  
+A method to create a new user in a specific guild.
+```js
+Level.createUser(<guildId - string>, <userId - string>);
+
+// Returns <Promise<boolean>>
+```
+
+#### deleteUser()  
+A method to delete a user in a specific guild.
+```js
+Level.deleteUser(<guildId - string>, <userId - string>);
+
+// Returns <Promise<boolean>>
+```
+
+#### resetUser()  
+A method to reset a users xp and level inside a specific guild
+```js
+Level.resetUser(<guildId - string>, <userId - string>);
+
+// Returns <Promise<boolean>>
 ```
 
 #### isGuild()  
