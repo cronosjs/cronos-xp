@@ -1,5 +1,5 @@
 # <h1 align="center">Cronos-xp</h1>
-<a href="https://discord.gg/eXrQv9e699"><img src="https://discord.com/api/guilds/841765316619141190/widget.json" alt="Discord server"/></a>
+<a href="https://discord.gg/eXrQv9e699"><img src="https://discord.com/api/guilds/841765316619141190/widget.png" alt="Discord server"/></a>  
 A flexible xp-based level system framework that uses mongoDB
 
 This package was designed for [Discord](https://www.discord.com) but nothing is linking it to discord directly, so if you are searching for a general xp-based level system think of guildId as a group name and userId as the individual users. (*Note: guildId has to be unique, and the userId's inside that guild have to be unique as well*)
