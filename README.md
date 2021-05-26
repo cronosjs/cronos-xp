@@ -271,6 +271,14 @@ Level.deleteGuild(<guildId - string>);
 // Returns <Promise<boolean>>
 ```
 
+#### resetGuild()
+A method to delete all users of a specific guild
+```js
+Level.resetUser(<guildId - string>);
+
+// Returns <Promise<boolean>>
+```
+
 ## Private Static Methods
 
 Those methods are just for validating function arguments  
