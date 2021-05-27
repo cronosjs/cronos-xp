@@ -25,7 +25,9 @@
     "mongo",
     "mongoose",
     "mongodb",
-    "discord",
+    "discord",,
+    "discord-xp",
+    "discord-leveling",
     "javascript"
   ],
   "homepage": "https://github.com/cronos-team/cronos-xp#readme",
