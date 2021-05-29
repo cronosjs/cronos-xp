@@ -1,7 +1,7 @@
 {
   "name": "cronos-xp",
   "version": "1.0.2",
-  "description": "",
+  "description": "A flexible xp-based level system framework that uses mongoDB",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
