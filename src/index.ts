@@ -86,7 +86,7 @@ interface XpForNextReturnObject {
 /**
  * A LevelSystem class that works with a mongoDB and allows for quite some flexibility.
  *
- * See the {@link https://github.com/elttayman-Co/cronos-xp#readme readme}
+ * See the {@link https://github.com/cronos-team/cronos-xp#readme readme}
  */
 class LevelSystem {
     private readonly _model: any;
