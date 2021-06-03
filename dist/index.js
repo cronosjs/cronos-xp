@@ -14,7 +14,7 @@ class MissingArgumentException extends Error {
 /**
  * A LevelSystem class that works with a mongoDB and allows for quite some flexibility.
  *
- * See the {@link https://github.com//cronos-xp#readme readme}
+ * See the {@link https://github.com/cronos-team/cronos-xp#readme readme}
  */
 class LevelSystem {
     /**
@@ -151,6 +151,7 @@ class LevelSystem {
         let isUser = await this.isUser(guildId, userId);
         if (!isUser)
             throw new Error("This guildId or userId does not exist");
+        value = Math.round(value);
         return new Promise(((resolve, reject) => {
             this._model.updateOne({ "_id": guildId }, {
                 $set: {
@@ -183,6 +184,7 @@ class LevelSystem {
         let isUser = await this.isUser(guildId, userId);
         if (!isUser)
             throw new Error("This guildId or userId does not exist");
+        value = Math.round(value);
         return new Promise(((resolve, reject) => {
             this._model.updateOne({ "_id": guildId }, {
                 $set: {
@@ -318,6 +320,7 @@ class LevelSystem {
         catch (e) {
             throw e;
         }
+        value = Math.round(value);
         let user = await this.getUser(guildId, userId);
         return new Promise(((resolve, reject) => {
             if (typeof user !== "boolean") {
@@ -372,6 +375,7 @@ class LevelSystem {
         catch (e) {
             throw e;
         }
+        value = Math.round(value);
         let user = await this.getUser(guildId, userId);
         return new Promise(((resolve, reject) => {
             if (typeof user !== "boolean") {
@@ -550,6 +554,27 @@ class LevelSystem {
         }));
     }
     /**
+     * @param {(string | number)} userId - The id of the user
+     * @returns {Promise<boolean>} - Returns true if the user was deleted globally
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {Error} - If there was a problem with the update operation
+     */
+    async deleteUserGlobal(userId) {
+        try {
+            userId = await LevelSystem._validateUserId(userId);
+        }
+        catch (e) {
+            throw e;
+        }
+        return new Promise(((resolve, reject) => {
+            this._model.updateMany({ [`users.${userId}`]: { $exists: true } }, { $unset: { [`users.${userId}`]: undefined } }, (e) => {
+                if (e)
+                    reject(e);
+                resolve(true);
+            });
+        }));
+    }
+    /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
      * @returns {Promise<boolean>} - Returns true if the user was reset
@@ -565,6 +590,32 @@ class LevelSystem {
             throw e;
         }
         return this.setXp(guildId, userId, 0);
+    }
+    /**
+     * @param {(string | number)} userId - The id of the user
+     * @returns {Promise<boolean>} - Returns true if the user was reset globally
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {Error} - If there was a problem with the update operation
+     */
+    async resetUserGlobal(userId) {
+        try {
+            userId = await LevelSystem._validateUserId(userId);
+        }
+        catch (e) {
+            throw e;
+        }
+        return new Promise(((resolve, reject) => {
+            this._model.updateMany({ [`users.${userId}`]: { $exists: true } }, {
+                $set: {
+                    [`users.${userId}.level`]: 0,
+                    [`users.${userId}.xp`]: 0
+                }
+            }, (e) => {
+                if (e)
+                    reject(e);
+                resolve(true);
+            });
+        }));
     }
     /**
      * @param {(string | number)} guildId - The id of the guild
@@ -711,8 +762,8 @@ class LevelSystem {
      * @throws {MissingArgumentException} - If there is a missing argument
      */
     static _validateUserId(userId) {
-        if (!userId)
-            throw new MissingArgumentException("Missing parameter \"guildId\"");
+        if (!userId && userId !== 0)
+            throw new MissingArgumentException("Missing parameter \"userId\"");
         if (typeof userId === "string")
             return userId;
         return userId.toString();

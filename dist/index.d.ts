@@ -195,6 +195,13 @@ declare class LevelSystem {
      */
     deleteUser(guildId: string | number, userId: string | number): Promise<boolean>;
     /**
+     * @param {(string | number)} userId - The id of the user
+     * @returns {Promise<boolean>} - Returns true if the user was deleted globally
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {Error} - If there was a problem with the update operation
+     */
+    deleteUserGlobal(userId: string | number): Promise<boolean>;
+    /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
      * @returns {Promise<boolean>} - Returns true if the user was reset
@@ -202,6 +209,13 @@ declare class LevelSystem {
      * @throws {Error} - If there was a problem with the update operation
      */
     resetUser(guildId: string | number, userId: string | number): Promise<boolean>;
+    /**
+     * @param {(string | number)} userId - The id of the user
+     * @returns {Promise<boolean>} - Returns true if the user was reset globally
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {Error} - If there was a problem with the update operation
+     */
+    resetUserGlobal(userId: string | number): Promise<boolean>;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @returns {Promise<boolean>} - Returns true if guild exists and false if it doesn't

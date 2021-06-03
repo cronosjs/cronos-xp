@@ -190,12 +190,12 @@ class LevelSystem {
      * @param {number} currentXp - The current xp on which the calculations for the next level are based on
      * @returns {(number | XpForNextReturnObject)} - The amount of xp needed or the current and next level as well as their min required XP
      */
-    public xpForNext(currentXp: number): number | XpForNextReturnObject{
+    public xpForNext(currentXp: number): number | XpForNextReturnObject {
         let currentLevel = this.levelForXp(currentXp)
         let currentLevelXp = this.xpForLevel(currentLevel)
         let nextLevel = currentLevel + 1
         let nextLevelXp = this.xpForLevel(nextLevel)
-        if(!this._returnDetails){
+        if (!this._returnDetails) {
             return nextLevelXp - currentXp
         } else {
             return {
@@ -225,7 +225,9 @@ class LevelSystem {
         }
 
         let isUser = await this.isUser(guildId, userId)
-        if(!isUser) throw new Error("This guildId or userId does not exist");
+        if (!isUser) throw new Error("This guildId or userId does not exist");
+
+        value = Math.round(value)
 
         return new Promise(((resolve, reject) => {
             this._model.updateOne(
@@ -261,7 +263,9 @@ class LevelSystem {
         }
 
         let isUser = await this.isUser(guildId, userId)
-        if(!isUser) throw new Error("This guildId or userId does not exist");
+        if (!isUser) throw new Error("This guildId or userId does not exist");
+
+        value = Math.round(value)
 
         return new Promise(((resolve, reject) => {
             this._model.updateOne(
@@ -408,6 +412,8 @@ class LevelSystem {
             throw e;
         }
 
+        value = Math.round(value)
+
         let user = await this.getUser(guildId, userId);
         return new Promise(((resolve, reject) => {
             if (typeof user !== "boolean") {
@@ -463,6 +469,8 @@ class LevelSystem {
         } catch (e) {
             throw e
         }
+
+        value = Math.round(value)
 
         let user = await this.getUser(guildId, userId);
         return new Promise(((resolve, reject) => {
@@ -657,6 +665,31 @@ class LevelSystem {
     }
 
     /**
+     * @param {(string | number)} userId - The id of the user
+     * @returns {Promise<boolean>} - Returns true if the user was deleted globally
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {Error} - If there was a problem with the update operation
+     */
+    public async deleteUserGlobal(userId: string | number): Promise<boolean>{
+        try {
+            userId = await LevelSystem._validateUserId(userId);
+        } catch (e) {
+            throw e;
+        }
+
+        return new Promise(((resolve, reject) => {
+            this._model.updateMany(
+                {[`users.${userId}`]: {$exists: true}},
+                {$unset: {[`users.${userId}`]: undefined}},
+                (e: Error) => {
+                    if (e) reject(e);
+                    resolve(true);
+                }
+            )
+        }))
+    }
+
+    /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
      * @returns {Promise<boolean>} - Returns true if the user was reset
@@ -672,6 +705,37 @@ class LevelSystem {
         }
 
         return this.setXp(guildId, userId, 0);
+    }
+
+    /**
+     * @param {(string | number)} userId - The id of the user
+     * @returns {Promise<boolean>} - Returns true if the user was reset globally
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {Error} - If there was a problem with the update operation
+     */
+    public async resetUserGlobal(userId: string | number): Promise<boolean> {
+        try {
+            userId = await LevelSystem._validateUserId(userId);
+        } catch (e) {
+            throw e;
+        }
+
+        return new Promise(((resolve, reject) => {
+            this._model.updateMany(
+                {[`users.${userId}`]: {$exists: true}},
+                {
+                    $set: {
+                        [`users.${userId}.level`]: 0,
+                        [`users.${userId}.xp`]: 0
+                    }
+                },
+
+                (e: Error) => {
+                    if (e) reject(e);
+                    resolve(true);
+                }
+            )
+        }))
     }
 
     /**
@@ -784,7 +848,7 @@ class LevelSystem {
      * @throws {MissingArgumentException} - If there is a missing argument
      * @throws {Error} - If there was a problem with the update operation
      */
-    public async resetGuild(guildId: string | number): Promise<boolean>{
+    public async resetGuild(guildId: string | number): Promise<boolean> {
         try {
             guildId = await LevelSystem._validateGuildId(guildId);
         } catch (e) {
@@ -824,7 +888,7 @@ class LevelSystem {
      * @throws {MissingArgumentException} - If there is a missing argument
      */
     private static _validateUserId(userId: string | number): string {
-        if (!userId) throw new MissingArgumentException("Missing parameter \"guildId\"");
+        if (!userId && userId !== 0) throw new MissingArgumentException("Missing parameter \"userId\"");
         if (typeof userId === "string") return userId;
         return userId.toString();
     }
