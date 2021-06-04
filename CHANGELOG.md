@@ -1,5 +1,7 @@
-# 1.0.2
+# 1.0.4
 
-- Added Keywords for NPM
-- Fixed Repo URL, Homepage URL and Bugs / Issues URL
-- Fixed some minor spelling mistakes in README.md
+- Added method deleteUserGlobal
+- Added method resetUserGlobal
+- Added support for linear level increase
+- Reworked readme and adjusted it to changes. Also added example for how both linear and exponential level growth could look like
+- Fixed some spelling and labeling mistakes
