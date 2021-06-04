@@ -33,7 +33,7 @@ const Level = new CronosXp("mongoDBUrlGoesHere", {
 ## Constructor Options
 **linear:**  
 Defines if the leveling is linear *(aka. you always need the same amount of xp for each level)* or exponential *(see below)*.  
-[Here](#Example) is an example of how it works
+[Here](#example) is an example of how it works
 
 **xpGap:**  
 *Only needed if **linear** is true*  
