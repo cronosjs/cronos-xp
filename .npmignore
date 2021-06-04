@@ -1,8 +1,8 @@
 # IDE settings
-.idea
+.idea/
 
 # Ignoring Typescript source files
-src
+src/
 tsconfig.json
 
 # Github Stuff
@@ -15,3 +15,5 @@ src/devExample.ts
 dist/devExample.js
 dist/devExample.d.ts
 dist/example.js
+tests/
+tests/linear.test.js
