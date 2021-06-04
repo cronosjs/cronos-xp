@@ -5,6 +5,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
+    "test": "jest --verbose ./tests --setupFiles ./tests/setup.js",
     "start": "node ./dist/index.js",
     "tsc": "tsc -p tsconfig.json",
     "watchtsc": "tsc -w -p tsconfig.json"

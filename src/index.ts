@@ -95,7 +95,7 @@ interface XpForNextReturnObject {
  * See the {@link https://github.com/cronos-team/cronos-xp#readme readme}
  */
 class LevelSystem {
-    private readonly _model: any;
+    private _model: any;
     private readonly _linear: boolean;
     private readonly _xpGap: number;
     private readonly _growthMultiplier: number;
@@ -167,6 +167,17 @@ class LevelSystem {
         });
 
         this._model = mongoose.model("GuildXP", guildSchema, "GuildXP");
+    }
+
+    /**
+     * This method closes the connection to the database and deletes the current model
+     */
+    public destroy(){
+        return new Promise((resolve => {
+            mongoose.connection.close()
+            this._model = null
+            resolve(true)
+        }))
     }
 
     /**

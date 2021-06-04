@@ -274,11 +274,11 @@ for (let allTests = 0; allTests < 2; allTests++) {
             for (let i = 1; i < 7; i++) {
                 expect(await levelSystem.deleteGuild(i)).toBe(true)
             }
-        })
+        });
     })
 
     describe(`without startWithZero (static only) [${allTests === 0 ? "without details" : "with details"}]`, () => {
-        const cronosXp = require("../dist/index.js")
+        const cronosXp = require("../dist/index.js");
 
         let levelSystem = new cronosXp(process.env.mongoURL, {
             linear: true,
@@ -288,41 +288,41 @@ for (let allTests = 0; allTests < 2; allTests++) {
         });
 
         test("xpForLevel", () => {
-            let levels = [0, 1, 2, 50, 51, 52, 90, 91, 92]
+            let levels = [0, 1, 2, 50, 51, 52, 90, 91, 92];
             levels.forEach(value => {
-                expect(levelSystem.xpForLevel(value)).toBe(value * gap - gap)
+                expect(levelSystem.xpForLevel(value)).toBe(value * gap - gap);
             })
         })
 
         test("levelForXp", () => {
-            let levels = [0, 1, 2, 50, 51, 52, 90, 91, 92]
+            let levels = [0, 1, 2, 50, 51, 52, 90, 91, 92];
             levels.forEach((value) => {
-                expect(levelSystem.levelForXp(Math.random() * gap + value * gap)).toBe(value + 1)
+                expect(levelSystem.levelForXp(Math.random() * gap + value * gap)).toBe(value + 1);
             })
         })
 
         test("xpForNext", () => {
             if (levelSystem._returnDetails === true) {
-                let levels = [0, 1, 2, 50, 51, 52, 90, 91, 92]
+                let levels = [0, 1, 2, 50, 51, 52, 90, 91, 92];
                 levels.forEach((value) => {
                     // value += 1
-                    let xpOffset = Math.round(Math.random() * gap)
-                    let inputXp = xpOffset + value * gap
+                    let xpOffset = Math.round(Math.random() * gap);
+                    let inputXp = xpOffset + value * gap;
                     expect(levelSystem.xpForNext(inputXp)).toStrictEqual({
                         xpNeeded: gap - xpOffset,
                         currentLevel: value + 1,
                         nextLevel: value + 2,
                         currentLevelXp: value * gap,
                         nextLevelXp: value * gap + gap
-                    })
-                })
+                    });
+                });
             } else {
-                let levels = [0, 1, 2, 50, 51, 52, 90, 91, 92]
+                let levels = [0, 1, 2, 50, 51, 52, 90, 91, 92];
                 levels.forEach((value) => {
-                    let xpOffset = Math.round(Math.random() * gap)
-                    expect(levelSystem.xpForNext(xpOffset + value * gap)).toBe(gap - xpOffset)
-                })
+                    let xpOffset = Math.round(Math.random() * gap);
+                    expect(levelSystem.xpForNext(xpOffset + value * gap)).toBe(gap - xpOffset);
+                });
             }
-        })
-    })
+        });
+    });
 }

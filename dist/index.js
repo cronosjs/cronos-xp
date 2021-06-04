@@ -88,6 +88,16 @@ class LevelSystem {
         this._model = mongoose.model("GuildXP", guildSchema, "GuildXP");
     }
     /**
+     * This method closes the connection to the database and deletes the current model
+     */
+    destroy() {
+        return new Promise((resolve => {
+            mongoose.connection.close();
+            this._model = null;
+            resolve(true);
+        }));
+    }
+    /**
      * Method that returns the amount of xp needed for a certain level
      * @param {number} targetLevel - The desired level
      * @returns {number} - Amount of xp needed for targetLevel

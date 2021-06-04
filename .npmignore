@@ -17,3 +17,4 @@ dist/devExample.d.ts
 dist/example.js
 tests/
 tests/linear.test.js
+tests/setup.js

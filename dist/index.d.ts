@@ -75,7 +75,7 @@ interface XpForNextReturnObject {
  * See the {@link https://github.com/cronos-team/cronos-xp#readme readme}
  */
 declare class LevelSystem {
-    private readonly _model;
+    private _model;
     private readonly _linear;
     private readonly _xpGap;
     private readonly _growthMultiplier;
@@ -86,6 +86,10 @@ declare class LevelSystem {
      * @param {ConstructorOptions} [options] - A parameter for options
      */
     constructor(mongoUrl: string, options?: ConstructorOptions);
+    /**
+     * This method closes the connection to the database and deletes the current model
+     */
+    destroy(): Promise<unknown>;
     /**
      * Method that returns the amount of xp needed for a certain level
      * @param {number} targetLevel - The desired level
