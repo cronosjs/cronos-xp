@@ -23,18 +23,28 @@ npm i cronos-xp
 ```js
 const CronosXp = require("cronos-xp")
 const Level = new CronosXp("mongoDBUrlGoesHere", {
+    linear: false,        //Default value
+    xpGap: 300,           //Default value
     growthMultiplier: 30, //Default value
     startWithZero: true,  //Default value
     returnDetails: false  //Default value
 })
 ```
 ## Constructor Options
+**linear:**  
+Defines if the leveling is linear *(aka. you always need the same amount of xp for each level)* or exponential *(see below)*.  
+[Here](#Example) is an example of how it works
+
+**xpGap:**  
+*Only needed if **linear** is true*  
+This value defines the xp gap between the different levels
 
 **growthMultiplier:**  
+*Only needed if **linear** is false*  
 The XP needed for a level is calculated with the function ``ƒ(x) = g * x²`` where `g = growthMultiplier`.  
 (A growthMultiplier of `0` equals `x`, turning the function into ``ƒ(x) = x³``)  
 
-*Noob tip:*  
+*Hint:*  
 *High `growthMultiplier` = rapid increase in the amount of xp needed for the next level.*  
 *Low `growthMultiplier` = slow increase in the amount of xp needed for the next level.*
 
@@ -54,10 +64,41 @@ This includes:
 
 For more information take a look at the Declaration file [index.d.ts](https://github.com/cronos-team/cronos-xp/blob/main/dist/index.d.ts)
 
+## Example
+```ts
+linear = true; xpGap = 500;
+level 0 = "0xp"
+level 1 = "500xp"
+level 2 = "1,000xp"
+//...
+level 50 = "25,000xp"
+level 51 = "25,500xp"
+level 52 = "26,000xp"
+//...
+level 90 = "45,000xp"
+level 91 = "45,500xp"
+level 92 = "46,000xp"
+
+linear = false; growthMultiplier = 20;
+level 0 = "0xp"
+level 1 = "20xp"
+level 2 = "80xp"
+//...
+level 50 = "50,000xp"
+level 51 = "52,020xp"
+level 52 = "54,080xp"
+//...
+level 90 = "162,000xp"
+level 91 = "165,620xp"
+level 92 = "169,280xp"
+```
+
 ## Object Structure
 #### ConstructorOptions
 ```ts
 interface ConstructorOptions {
+    linear?: boolean,
+    xpGap?: number,
     growthMultiplier?: number,
     startWithZero?: boolean,
     returnDetails?: boolean

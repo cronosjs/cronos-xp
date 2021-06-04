@@ -22,6 +22,30 @@ class LevelSystem {
      * @param {ConstructorOptions} [options] - A parameter for options
      */
     constructor(mongoUrl, options) {
+        if (typeof options?.linear !== "undefined") {
+            if (typeof options?.linear === "boolean") {
+                this._linear = options.linear;
+            }
+            else {
+                console.info("Invalid linear input. Setting linear to default (false)");
+                this._linear = false;
+            }
+        }
+        else {
+            this._linear = false;
+        }
+        if (typeof options?.xpGap !== "undefined") {
+            if (typeof options?.xpGap === "number") {
+                this._xpGap = Math.abs(options.xpGap);
+            }
+            else {
+                console.info("Invalid xpGap input. Setting xpGap to default (300)");
+                this._xpGap = 300;
+            }
+        }
+        else {
+            this._xpGap = 300;
+        }
         if (typeof options?.growthMultiplier !== "undefined") {
             if (typeof options?.growthMultiplier === "number") {
                 this._growthMultiplier = Math.abs(options.growthMultiplier);
@@ -51,7 +75,7 @@ class LevelSystem {
                 this._returnDetails = options.returnDetails;
             }
             else {
-                console.info("Invalid startWithZero input. Setting startWithZero to default (false)");
+                console.info("Invalid returnDetails input. Setting returnDetails to default (false)");
                 this._returnDetails = false;
             }
         }
@@ -71,23 +95,28 @@ class LevelSystem {
      * @returns {number} - Amount of xp needed for targetLevel
      */
     xpForLevel(targetLevel) {
-        if (this._growthMultiplier === 0) {
-            // level³ = xp
-            let functionValue = Math.pow(targetLevel, 3);
-            if (!this._startWithZero) {
-                // level³ - level = xp
-                functionValue = functionValue - targetLevel;
-            }
-            return Math.round(functionValue);
+        if (this._linear) {
+            return this._startWithZero ? targetLevel * this._xpGap : (targetLevel - 1) * this._xpGap;
         }
         else {
-            // growthMultiplier * level² = xp
-            let functionValue = Math.abs(this._growthMultiplier) * Math.pow(targetLevel, 2);
-            if (!this._startWithZero) {
-                // growthMultiplier * level² - growthMultiplier = xp
-                functionValue = functionValue - this._growthMultiplier;
+            if (this._growthMultiplier === 0) {
+                // level³ = xp
+                let functionValue = Math.pow(targetLevel, 3);
+                if (!this._startWithZero) {
+                    // level³ - level = xp
+                    functionValue = functionValue - targetLevel;
+                }
+                return Math.round(functionValue);
             }
-            return Math.round(functionValue);
+            else {
+                // growthMultiplier * level² = xp
+                let functionValue = Math.abs(this._growthMultiplier) * Math.pow(targetLevel, 2);
+                if (!this._startWithZero) {
+                    // growthMultiplier * level² - growthMultiplier = xp
+                    functionValue = functionValue - this._growthMultiplier;
+                }
+                return Math.round(functionValue);
+            }
         }
     }
     /**
@@ -96,17 +125,22 @@ class LevelSystem {
      * @returns {number} - The level at this amount of xp
      */
     levelForXp(targetXp) {
-        if (this._growthMultiplier === 0) {
-            // level = xp^1/3
-            let functionValue;
-            this._startWithZero ? functionValue = targetXp : functionValue = targetXp + this._growthMultiplier;
-            return Math.floor(Math.pow(functionValue, 1 / 3));
+        if (this._linear) {
+            return this._startWithZero ? Math.floor(targetXp / this._xpGap) : Math.ceil(targetXp / this._xpGap);
         }
         else {
-            // level = (xp / growthMultiplier)^1/2
-            let functionValue;
-            this._startWithZero ? functionValue = targetXp : functionValue = targetXp + this._growthMultiplier;
-            return Math.floor(Math.pow(functionValue / Math.abs(this._growthMultiplier), 1 / 2));
+            if (this._growthMultiplier === 0) {
+                // level = xp^1/3
+                let functionValue;
+                this._startWithZero ? functionValue = targetXp : functionValue = targetXp + this._growthMultiplier;
+                return Math.floor(Math.pow(functionValue, 1 / 3));
+            }
+            else {
+                // level = (xp / growthMultiplier)^1/2
+                let functionValue;
+                this._startWithZero ? functionValue = targetXp : functionValue = targetXp + this._growthMultiplier;
+                return Math.floor(Math.pow(functionValue / Math.abs(this._growthMultiplier), 1 / 2));
+            }
         }
     }
     /**

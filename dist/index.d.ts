@@ -1,16 +1,22 @@
 /**
+ * @property {boolean} [linear = false]
+ * @property {number} [xpGap = 300]
  * @property {number} [growthMultiplier = 30]
  * @property {boolean} [startWithZero = true]
  * @property {boolean} [returnDetails = false]
  * @example
  * // growthMultiplier = 0 means x³ and not 0 * x²
  * const DefaultValues = {
+ *     linear = false,
+ *     xpGap = 300,
  *     growthMultiplier = 30,
- *     startWithZero = true
- *     returnDetails = true
+ *     startWithZero = true,
+ *     returnDetails = false
  * }
  */
 interface ConstructorOptions {
+    linear?: boolean;
+    xpGap?: number;
     growthMultiplier?: number;
     startWithZero?: boolean;
     returnDetails?: boolean;
@@ -70,6 +76,8 @@ interface XpForNextReturnObject {
  */
 declare class LevelSystem {
     private readonly _model;
+    private readonly _linear;
+    private readonly _xpGap;
     private readonly _growthMultiplier;
     private readonly _startWithZero;
     private readonly _returnDetails;
