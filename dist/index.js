@@ -87,6 +87,7 @@ class LevelSystem {
         });
         this._model = mongoose.model("GuildXP", guildSchema, "GuildXP");
     }
+    ;
     /**
      * This method closes the connection to the database and deletes the current model
      */
@@ -97,6 +98,7 @@ class LevelSystem {
             resolve(true);
         }));
     }
+    ;
     /**
      * Method that returns the amount of xp needed for a certain level
      * @param {number} targetLevel - The desired level
@@ -128,6 +130,7 @@ class LevelSystem {
             }
         }
     }
+    ;
     /**
      * Method that returns the level for a specific amount of xp
      * @param {number} targetXp - The desired xp
@@ -153,6 +156,7 @@ class LevelSystem {
             }
         }
     }
+    ;
     /**
      * Method that returns the amount of xp needed to reach the next level
      * @param {number} currentXp - The current xp on which the calculations for the next level are based on
@@ -177,6 +181,7 @@ class LevelSystem {
             };
         }
     }
+    ;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
@@ -210,6 +215,7 @@ class LevelSystem {
             });
         }));
     }
+    ;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
@@ -243,6 +249,7 @@ class LevelSystem {
             });
         }));
     }
+    ;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
@@ -296,6 +303,7 @@ class LevelSystem {
             }
         }));
     }
+    ;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
@@ -349,6 +357,7 @@ class LevelSystem {
             }
         }));
     }
+    ;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
@@ -404,6 +413,7 @@ class LevelSystem {
             }
         }));
     }
+    ;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
@@ -460,6 +470,7 @@ class LevelSystem {
             }
         }));
     }
+    ;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {number} [limit = 10] - The amount of leaderboard entries to return
@@ -494,6 +505,7 @@ class LevelSystem {
             });
         }));
     }
+    ;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
@@ -519,6 +531,7 @@ class LevelSystem {
             });
         }));
     }
+    ;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
@@ -549,6 +562,7 @@ class LevelSystem {
             });
         }));
     }
+    ;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
@@ -575,6 +589,7 @@ class LevelSystem {
             });
         }));
     }
+    ;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
@@ -598,6 +613,7 @@ class LevelSystem {
             });
         }));
     }
+    ;
     /**
      * @param {(string | number)} userId - The id of the user
      * @returns {Promise<boolean>} - Returns true if the user was deleted globally
@@ -619,6 +635,7 @@ class LevelSystem {
             });
         }));
     }
+    ;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user
@@ -636,6 +653,7 @@ class LevelSystem {
         }
         return this.setXp(guildId, userId, 0);
     }
+    ;
     /**
      * @param {(string | number)} userId - The id of the user
      * @returns {Promise<boolean>} - Returns true if the user was reset globally
@@ -662,6 +680,7 @@ class LevelSystem {
             });
         }));
     }
+    ;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @returns {Promise<boolean>} - Returns true if guild exists and false if it doesn't
@@ -685,6 +704,7 @@ class LevelSystem {
             });
         }));
     }
+    ;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @returns {Promise<boolean | object>} - Returns the guilds data if it exists or false if he doesn't
@@ -715,6 +735,7 @@ class LevelSystem {
             });
         }));
     }
+    ;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @returns {Promise<boolean>} - Returns true if the guild was created and false if it already exists
@@ -740,6 +761,7 @@ class LevelSystem {
             });
         });
     }
+    ;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @returns {Promise<boolean>} - Returns true if the guild was deleted
@@ -764,6 +786,7 @@ class LevelSystem {
             });
         }));
     }
+    ;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @returns {Promise<boolean>} - Returns true if the guild was reset
@@ -789,6 +812,7 @@ class LevelSystem {
             });
         }));
     }
+    ;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @returns {string} - A valid guildId as a string
@@ -801,6 +825,7 @@ class LevelSystem {
             return guildId;
         return guildId.toString();
     }
+    ;
     /**
      * @param {(string | number)} userId - The id of the user
      * @returns {string} - A valid userId as a string
@@ -813,5 +838,6 @@ class LevelSystem {
             return userId;
         return userId.toString();
     }
+    ;
 }
 module.exports = LevelSystem;

@@ -163,22 +163,22 @@ class LevelSystem {
         }
 
         mongoose.connect(mongoUrl, {useNewUrlParser: true, useUnifiedTopology: true}).catch((e: Error) => {
-            console.error(e)
+            console.error(e);
         });
 
         this._model = mongoose.model("GuildXP", guildSchema, "GuildXP");
-    }
+    };
 
     /**
      * This method closes the connection to the database and deletes the current model
      */
-    public destroy(){
+    public destroy() {
         return new Promise((resolve => {
-            mongoose.connection.close()
-            this._model = null
-            resolve(true)
-        }))
-    }
+            mongoose.connection.close();
+            this._model = null;
+            resolve(true);
+        }));
+    };
 
     /**
      * Method that returns the amount of xp needed for a certain level
@@ -186,9 +186,9 @@ class LevelSystem {
      * @returns {number} - Amount of xp needed for targetLevel
      */
     public xpForLevel(targetLevel: number): number {
-        targetLevel = Math.round(targetLevel)
+        targetLevel = Math.round(targetLevel);
         if (this._linear) {
-            return this._startWithZero ? targetLevel * this._xpGap : (targetLevel - 1) * this._xpGap
+            return this._startWithZero ? targetLevel * this._xpGap : (targetLevel - 1) * this._xpGap;
         } else {
             if (this._growthMultiplier === 0) {
                 // level³ = xp
@@ -208,7 +208,7 @@ class LevelSystem {
                 return Math.round(functionValue);
             }
         }
-    }
+    };
 
     /**
      * Method that returns the level for a specific amount of xp
@@ -216,9 +216,9 @@ class LevelSystem {
      * @returns {number} - The level at this amount of xp
      */
     public levelForXp(targetXp: number): number {
-        targetXp = Math.round(targetXp)
+        targetXp = Math.round(targetXp);
         if (this._linear) {
-            return this._startWithZero ? Math.floor(targetXp / this._xpGap) : Math.floor(targetXp / this._xpGap) + 1
+            return this._startWithZero ? Math.floor(targetXp / this._xpGap) : Math.floor(targetXp / this._xpGap) + 1;
         } else {
             if (this._growthMultiplier === 0) {
                 // level = xp^1/3
@@ -232,7 +232,7 @@ class LevelSystem {
                 return Math.floor(Math.pow(functionValue / Math.abs(this._growthMultiplier), 1 / 2));
             }
         }
-    }
+    };
 
     /**
      * Method that returns the amount of xp needed to reach the next level
@@ -240,13 +240,13 @@ class LevelSystem {
      * @returns {(number | XpForNextReturnObject)} - The amount of xp needed or the current and next level as well as their min required XP
      */
     public xpForNext(currentXp: number): number | XpForNextReturnObject {
-        currentXp = Math.round(currentXp)
-        let currentLevel = this.levelForXp(currentXp)
-        let currentLevelXp = this.xpForLevel(currentLevel)
-        let nextLevel = currentLevel + 1
-        let nextLevelXp = this.xpForLevel(nextLevel)
+        currentXp = Math.round(currentXp);
+        let currentLevel = this.levelForXp(currentXp);
+        let currentLevelXp = this.xpForLevel(currentLevel);
+        let nextLevel = currentLevel + 1;
+        let nextLevelXp = this.xpForLevel(nextLevel);
         if (!this._returnDetails) {
-            return nextLevelXp - currentXp
+            return nextLevelXp - currentXp;
         } else {
             return {
                 xpNeeded: nextLevelXp - currentXp,
@@ -254,9 +254,9 @@ class LevelSystem {
                 nextLevel: nextLevel,
                 currentLevelXp: currentLevelXp,
                 nextLevelXp: nextLevelXp
-            }
+            };
         }
-    }
+    };
 
     /**
      * @param {(string | number)} guildId - The id of the guild
@@ -274,10 +274,10 @@ class LevelSystem {
             throw e;
         }
 
-        let isUser = await this.isUser(guildId, userId)
+        let isUser = await this.isUser(guildId, userId);
         if (!isUser) throw new Error("This guildId or userId does not exist");
 
-        value = Math.round(value)
+        value = Math.round(value);
 
         return new Promise(((resolve, reject) => {
             this._model.updateOne(
@@ -292,9 +292,9 @@ class LevelSystem {
                     if (e) reject(e);
                     resolve(true);
                 }
-            )
-        }))
-    }
+            );
+        }));
+    };
 
     /**
      * @param {(string | number)} guildId - The id of the guild
@@ -312,10 +312,10 @@ class LevelSystem {
             throw e;
         }
 
-        let isUser = await this.isUser(guildId, userId)
+        let isUser = await this.isUser(guildId, userId);
         if (!isUser) throw new Error("This guildId or userId does not exist");
 
-        value = Math.round(value)
+        value = Math.round(value);
 
         return new Promise(((resolve, reject) => {
             this._model.updateOne(
@@ -330,9 +330,9 @@ class LevelSystem {
                     if (e) reject(e);
                     resolve(true);
                 }
-            )
-        }))
-    }
+            );
+        }));
+    };
 
     /**
      * @param {(string | number)} guildId - The id of the guild
@@ -383,12 +383,12 @@ class LevelSystem {
                         }
                         resolve(result);
                     }
-                )
+                );
             } else {
                 throw Error("Target user couldn't be found in the database");
             }
-        }))
-    }
+        }));
+    };
 
     /**
      * @param {(string | number)} guildId - The id of the guild
@@ -439,12 +439,12 @@ class LevelSystem {
                         }
                         resolve(result);
                     }
-                )
+                );
             } else {
                 throw Error("Target user couldn't be found in the database");
             }
-        }))
-    }
+        }));
+    };
 
     /**
      * @param {(string | number)} guildId - The id of the guild
@@ -462,7 +462,7 @@ class LevelSystem {
             throw e;
         }
 
-        value = Math.round(value)
+        value = Math.round(value);
 
         let user = await this.getUser(guildId, userId);
         return new Promise(((resolve, reject) => {
@@ -497,12 +497,12 @@ class LevelSystem {
                         }
                         resolve(result);
                     }
-                )
+                );
             } else {
                 throw Error("Target user couldn't be found in the database");
             }
-        }))
-    }
+        }));
+    };
 
     /**
      * @param {(string | number)} guildId - The id of the guild
@@ -514,13 +514,13 @@ class LevelSystem {
      */
     public async subtractLevel(guildId: string | number, userId: string | number, value: number): Promise<AddSubtractReturnObject> {
         try {
-            guildId = await LevelSystem._validateGuildId(guildId)
-            userId = await LevelSystem._validateUserId(userId)
+            guildId = await LevelSystem._validateGuildId(guildId);
+            userId = await LevelSystem._validateUserId(userId);
         } catch (e) {
-            throw e
+            throw e;
         }
 
-        value = Math.round(value)
+        value = Math.round(value);
 
         let user = await this.getUser(guildId, userId);
         return new Promise(((resolve, reject) => {
@@ -557,12 +557,12 @@ class LevelSystem {
                         }
                         resolve(result);
                     }
-                )
+                );
             } else {
                 throw Error("Target user couldn't be found in the database");
             }
-        }))
-    }
+        }));
+    };
 
     /**
      * @param {(string | number)} guildId - The id of the guild
@@ -596,9 +596,9 @@ class LevelSystem {
                 resolve(c);
             }).catch((e: Error) => {
                 reject(e);
-            })
-        }))
-    }
+            });
+        }));
+    };
 
     /**
      * @param {(string | number)} guildId - The id of the guild
@@ -621,9 +621,9 @@ class LevelSystem {
                 resolve(true);
             }).catch((e: Error) => {
                 reject(e);
-            })
-        }))
-    }
+            });
+        }));
+    };
 
     /**
      * @param {(string | number)} guildId - The id of the guild
@@ -653,9 +653,9 @@ class LevelSystem {
                 result.users[userId] ? resolve(result.users[userId]) : resolve(false);
             }).catch((e: Error) => {
                 reject(e);
-            })
-        }))
-    }
+            });
+        }));
+    };
 
     /**
      * @param {(string | number)} guildId - The id of the guild
@@ -683,9 +683,9 @@ class LevelSystem {
                     if (e) reject(e);
                     resolve(true);
                 }
-            )
-        }))
-    }
+            );
+        }));
+    };
 
     /**
      * @param {(string | number)} guildId - The id of the guild
@@ -710,9 +710,9 @@ class LevelSystem {
                     if (e) reject(e);
                     resolve(true);
                 }
-            )
-        }))
-    }
+            );
+        }));
+    };
 
     /**
      * @param {(string | number)} userId - The id of the user
@@ -735,9 +735,9 @@ class LevelSystem {
                     if (e) reject(e);
                     resolve(true);
                 }
-            )
-        }))
-    }
+            );
+        }));
+    };
 
     /**
      * @param {(string | number)} guildId - The id of the guild
@@ -755,7 +755,7 @@ class LevelSystem {
         }
 
         return this.setXp(guildId, userId, 0);
-    }
+    };
 
     /**
      * @param {(string | number)} userId - The id of the user
@@ -784,9 +784,9 @@ class LevelSystem {
                     if (e) reject(e);
                     resolve(true);
                 }
-            )
-        }))
-    }
+            );
+        }));
+    };
 
     /**
      * @param {(string | number)} guildId - The id of the guild
@@ -807,9 +807,9 @@ class LevelSystem {
                 resolve(true);
             }).catch((e: Error) => {
                 reject(e);
-            })
-        }))
-    }
+            });
+        }));
+    };
 
     /**
      * @param {(string | number)} guildId - The id of the guild
@@ -837,9 +837,9 @@ class LevelSystem {
                 resolve(result.users);
             }).catch((e: Error) => {
                 reject(e);
-            })
-        }))
-    }
+            });
+        }));
+    };
 
     /**
      * @param {(string | number)} guildId - The id of the guild
@@ -862,9 +862,9 @@ class LevelSystem {
             guild.save((e: Error) => {
                 if (e) reject(e);
                 resolve(true);
-            })
-        })
-    }
+            });
+        });
+    };
 
     /**
      * @param {(string | number)} guildId - The id of the guild
@@ -887,9 +887,9 @@ class LevelSystem {
                 resolve(true);
             }).catch((e: Error) => {
                 reject(e);
-            })
-        }))
-    }
+            });
+        }));
+    };
 
 
     /**
@@ -917,9 +917,9 @@ class LevelSystem {
                     if (e) reject(e);
                     resolve(true);
                 }
-            )
-        }))
-    }
+            );
+        }));
+    };
 
     /**
      * @param {(string | number)} guildId - The id of the guild
@@ -930,7 +930,7 @@ class LevelSystem {
         if (!guildId && guildId !== 0) throw new MissingArgumentException("Missing parameter \"guildId\"");
         if (typeof guildId === "string") return guildId;
         return guildId.toString();
-    }
+    };
 
     /**
      * @param {(string | number)} userId - The id of the user
@@ -941,7 +941,7 @@ class LevelSystem {
         if (!userId && userId !== 0) throw new MissingArgumentException("Missing parameter \"userId\"");
         if (typeof userId === "string") return userId;
         return userId.toString();
-    }
+    };
 }
 
 export = LevelSystem;
