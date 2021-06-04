@@ -82,9 +82,7 @@ class LevelSystem {
         else {
             this._returnDetails = false;
         }
-        mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
-            console.log("\x1b[32mSuccessfully connected to mongoDB\x1b[0m");
-        }).catch((e) => {
+        mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true }).catch((e) => {
             console.error(e);
         });
         this._model = mongoose.model("GuildXP", guildSchema, "GuildXP");
@@ -95,6 +93,7 @@ class LevelSystem {
      * @returns {number} - Amount of xp needed for targetLevel
      */
     xpForLevel(targetLevel) {
+        targetLevel = Math.round(targetLevel);
         if (this._linear) {
             return this._startWithZero ? targetLevel * this._xpGap : (targetLevel - 1) * this._xpGap;
         }
@@ -125,8 +124,9 @@ class LevelSystem {
      * @returns {number} - The level at this amount of xp
      */
     levelForXp(targetXp) {
+        targetXp = Math.round(targetXp);
         if (this._linear) {
-            return this._startWithZero ? Math.floor(targetXp / this._xpGap) : Math.ceil(targetXp / this._xpGap);
+            return this._startWithZero ? Math.floor(targetXp / this._xpGap) : Math.floor(targetXp / this._xpGap) + 1;
         }
         else {
             if (this._growthMultiplier === 0) {
@@ -149,6 +149,7 @@ class LevelSystem {
      * @returns {(number | XpForNextReturnObject)} - The amount of xp needed or the current and next level as well as their min required XP
      */
     xpForNext(currentXp) {
+        currentXp = Math.round(currentXp);
         let currentLevel = this.levelForXp(currentXp);
         let currentLevelXp = this.xpForLevel(currentLevel);
         let nextLevel = currentLevel + 1;
@@ -784,7 +785,7 @@ class LevelSystem {
      * @throws {MissingArgumentException} - If there is a missing argument
      */
     static _validateGuildId(guildId) {
-        if (!guildId)
+        if (!guildId && guildId !== 0)
             throw new MissingArgumentException("Missing parameter \"guildId\"");
         if (typeof guildId === "string")
             return guildId;
