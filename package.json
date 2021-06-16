@@ -5,7 +5,6 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "postinstall": "node -e \"try{require('./postinstall.js')}catch(e){}\"",
     "test": "jest --verbose ./tests --setupFiles ./tests/setup.js",
     "start": "node ./dist/index.js",
     "tsc": "tsc -p tsconfig.json",
