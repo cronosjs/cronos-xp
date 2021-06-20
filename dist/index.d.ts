@@ -190,6 +190,13 @@ declare class LevelSystem {
      * @throws {Error} - If there was a problem with the update operation
      */
     getUser(guildId: string | number, userId: string | number): Promise<User | boolean>;
+    /**
+     * @param {(string | number)} guildId - The id of the guild
+     * @param {(string | number)} userId - The id of the user
+     * @returns {Promise<number>} - Returns the users rank in the guild or 0 if the user doesn't exist
+     * @throws {MissingArgumentException} - If there is a missing argument
+     * @throws {Error} - If there was a problem with the update operation
+     */
     getUserRank(guildId: string | number, userId: string | number): Promise<number>;
     /**
      * @param {(string | number)} guildId - The id of the guild
