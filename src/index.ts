@@ -657,6 +657,30 @@ class LevelSystem {
         }));
     };
 
+    public async getUserRank(guildId: string | number, userId: string | number): Promise<number> {
+        try {
+            guildId = await LevelSystem._validateGuildId(guildId);
+            userId = await LevelSystem._validateUserId(userId);
+        } catch (e) {
+            throw e;
+        }
+
+        return new Promise(((resolve, reject) => {
+            this._model.findOne({"_id": guildId}).then((result: any) => {
+                if (result === null) resolve(0);
+                let a: [string, User][] = Object.entries(result.users);
+                let b = a.sort((a: [string, User], b: [string, User]) => b[1].xp - a[1].xp).map(x => x[0]);
+                if (typeof userId === "string") {
+                    resolve(b.indexOf(userId) + 1)
+                } else {
+                    resolve(0)
+                }
+            }).catch((e: Error) => {
+                reject(e);
+            });
+        }));
+    }
+
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user

@@ -190,6 +190,7 @@ declare class LevelSystem {
      * @throws {Error} - If there was a problem with the update operation
      */
     getUser(guildId: string | number, userId: string | number): Promise<User | boolean>;
+    getUserRank(guildId: string | number, userId: string | number): Promise<number>;
     /**
      * @param {(string | number)} guildId - The id of the guild
      * @param {(string | number)} userId - The id of the user

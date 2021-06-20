@@ -1,7 +1,7 @@
-# 1.0.4
+# 1.0.5
 
-- Added method deleteUserGlobal
-- Added method resetUserGlobal
-- Added support for linear level increase
-- Reworked readme and adjusted it to changes. Also added example for how both linear and exponential level growth could look like
+- Added method getUserRank
+- Added method destroy
+- Added jest tests for linear operations
+- Reworked readme and adjusted it to changes.
 - Fixed some spelling and labeling mistakes

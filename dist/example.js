@@ -64,10 +64,16 @@ let levelSystem = new cronosXp("mongoDBUrlGoesHere", {
         }
 
         let resetUser = await levelSystem.resetUser("123", "456");
-        if (!resetUser) return console.log(`There was an error while resetting this user`);
+        if (resetUser) return console.log(`User was successfully reset for this guild`);
+
+        let resetUserGlobal = await levelSystem.resetUserGlobal("456");
+        if (resetUserGlobal) return console.log(`User was successfully reset in all guilds`);
 
         let deletedUser = await levelSystem.deleteUser("123", "456");
         if (deletedUser) console.log("User was successfully deleted");
+
+        let deleteUserGlobal = await levelSystem.deleteUserGlobal("456");
+        if (deleteUserGlobal) console.log("User was successfully deleted in all guilds");
 
         let deletedGuild = await levelSystem.deleteGuild("123");
         if (deletedGuild) console.log("Guild was successfully deleted");

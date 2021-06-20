@@ -62,30 +62,34 @@ for (let allTests = 0; allTests < 2; allTests++) {
             }
         });
 
-        test("createGuild & isGuild", async () => {
+        test("createGuild", async () => {
             await clear()
             for (let i = 1; i < 7; i++) {
                 expect(await levelSystem.createGuild(i)).toBe(true);
             }
+        });
 
+        test("isGuild", async () => {
             for (let i = 1; i < 7; i++) {
                 expect(await levelSystem.isGuild(i)).toBe(true);
             }
-        });
+        })
 
-        test("createUser & isUser", async () => {
+        test("createUser", async () => {
             for (let i = 1; i < 7; i++) {
                 for (let n = 1; n < 10; n++) {
                     expect(await levelSystem.createUser(i, n)).toBe(true);
                 }
             }
+        });
 
+        test("isUser", async () => {
             for (let i = 1; i < 7; i++) {
                 for (let n = 1; n < 10; n++) {
                     expect(await levelSystem.isUser(i, n)).toBe(true);
                 }
             }
-        });
+        })
 
         test("setXp", async () => {
             for (let n = 1; n < 10; n++) {

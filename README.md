@@ -263,6 +263,16 @@ Level.getUser(<guildId - string>, <userId - string>);
 // Returns <Promise<User | boolean>>
 ```
 
+#### getUserRank()
+A method to get the Rank of a specific user in a specific guild.
+
+If the user exists it returns his rank, otherwise it will return 0 or throw an error.
+```js
+Level.getUserRank(<guildId - string>, <userId - string>);
+
+// Returns <Promise<number>>
+```
+
 #### createUser()  
 A method to create a new user in a specific guild.
 ```js
@@ -279,10 +289,26 @@ Level.deleteUser(<guildId - string>, <userId - string>);
 // Returns <Promise<boolean>>
 ```
 
+#### deleteUserGlobal()
+A method to delete a user in all guilds.
+```js
+Level.deleteUserGlobal(<userId - string>);
+
+// Returns <Promise<boolean>>
+```
+
 #### resetUser()  
-A method to reset a users xp and level inside a specific guild
+A method to reset a users xp and level inside a specific guild.
 ```js
 Level.resetUser(<guildId - string>, <userId - string>);
+
+// Returns <Promise<boolean>>
+```
+
+#### resetUserGlobal()
+A method to reset a users xp and level in all guilds.
+```js
+Level.resetUserGlobal(<userId - string>);
 
 // Returns <Promise<boolean>>
 ```
@@ -325,6 +351,14 @@ Level.deleteGuild(<guildId - string>);
 A method to delete all users of a specific guild
 ```js
 Level.resetUser(<guildId - string>);
+
+// Returns <Promise<boolean>>
+```
+
+#### destroy()
+A method that closes the MongoDB connection and clears the GuildXP model.
+```js
+Level.destroy();
 
 // Returns <Promise<boolean>>
 ```
