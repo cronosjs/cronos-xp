@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cronos-team/cronos-xp.git"
+    "url": "git+https://github.com/cronosjs/cronos-xp.git"
   },
   "author": "Renox (https://github.com/JustRenox)",
   "contributors": [
@@ -20,7 +20,7 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/cronos-team/cronos-xp/issues"
+    "url": "https://github.com/cronosjs/cronos-xp/issues"
   },
   "keywords": [
     "framework",
@@ -34,7 +34,7 @@
     "discord-leveling",
     "javascript"
   ],
-  "homepage": "https://github.com/cronos-team/cronos-xp#readme",
+  "homepage": "https://github.com/cronosjs/cronos-xp#readme",
   "devDependencies": {
     "jest": "^27.0.4",
     "typescript": "^4.3.2"

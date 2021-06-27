@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/cronos-team/cronos-xp">
+  <a href="https://github.com/cronosjs/cronos-xp">
     <img src="https://cdn.discordapp.com/attachments/792903485594665000/848942478286520370/XPPRUEBA.png" alt="cronos xp" />
   </a>
 </p> 
@@ -18,7 +18,7 @@ This package was designed for [Discord](https://www.discord.com) but nothing is 
 ## Setup
 
 ```
-npm i cronos-xp
+npm install cronos-xp
 ```
 ```js
 const CronosXp = require("cronos-xp")
@@ -62,7 +62,7 @@ This includes:
 * [subtractXp()](#subtractxp)
 * [subtractLevel()](#subtractlevel)
 
-For more information take a look at the Declaration file [index.d.ts](https://github.com/cronos-team/cronos-xp/blob/main/dist/index.d.ts)
+For more information take a look at the Declaration file [index.d.ts](https://github.com/cronosjs/cronos-xp/blob/main/dist/index.d.ts)
 
 ## Example
 ```ts
@@ -143,7 +143,7 @@ interface XpForNextReturnObject {
 
 ## Public Instance Methods
 
-If there are any questions about the methods, their parameters, their return types or anything thing else take a look at the Declaration file [index.d.ts](https://github.com/cronos-team/cronos-xp/blob/main/dist/index.d.ts)
+If there are any questions about the methods, their parameters, their return types or anything thing else take a look at the Declaration file [index.d.ts](https://github.com/cronosjs/cronos-xp/blob/main/dist/index.d.ts)
 or just join our [Discord](https://discord.gg/eXrQv9e699)
 <br/>
 #### xpForLevel()  
